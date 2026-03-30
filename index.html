@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pling — Push notifications for developers</title>
+  <meta name="description" content="Send push notifications to your iPhone from anywhere. One URL. One tap. Works from scripts, CI, web apps, and AI agents.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="Pling — Push notifications for developers">
+  <meta property="og:description" content="Send push notifications to your iPhone from anywhere. One URL. Works from scripts, CI, web apps, and AI agents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://plingpush.com">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pling — Push notifications for developers">
+  <meta name="twitter:description" content="Send push notifications to your iPhone from anywhere.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://plingpush.com">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Pling","description":"Push notifications for developers. Send from anywhere, receive on iPhone.","operatingSystem":"iOS","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111113;
+      --bg-card-hover: #18181b;
+      --border: #1e1e22;
+      --fg: #fafafa;
+      --fg-muted: #71717a;
+      --fg-dim: #52525b;
+      --accent: #f97316;
+      --accent-glow: rgba(249, 115, 22, 0.15);
+      --accent-dim: #c2410c;
+      --mono: 'Geist Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 10, 10, 0.8);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-brand img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
+
+    .nav-brand span {
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--fg); }
+
+    .nav-cta {
+      font-family: var(--mono) !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: var(--bg) !important;
+      background: var(--accent);
+      padding: 7px 16px;
+      border-radius: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.9; }
+
+    /* Hero */
+    .hero {
+      padding: 160px 24px 100px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(249, 115, 22, 0.2);
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--fg-muted);
+      max-width: 540px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-secondary {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg);
+      background: var(--bg-card);
+      padding: 12px 28px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: var(--bg-card-hover); border-color: #2a2a2e; }
+
+    /* Code demo */
+    .demo {
+      max-width: 680px;
+      margin: 60px auto 0;
+      position: relative;
+    }
+
+    .demo-window {
+      background: #0d0d0f;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .demo-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      background: #111113;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--fg-dim);
+      opacity: 0.3;
+    }
+
+    .demo-titlebar span {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--fg-dim);
+      margin-left: 8px;
+    }
+
+    .demo-body {
+      padding: 20px 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .demo-body .prompt { color: var(--accent); }
+    .demo-body .cmd { color: #d4d4d8; }
+    .demo-body .str { color: #a3e635; }
+    .demo-body .dim { color: var(--fg-dim); }
+    .demo-body .ok { color: #4ade80; }
+
+    /* Section */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 24px;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      font-size: 17px;
+      color: var(--fg-muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    /* Feature grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.25s;
+    }
+
+    .feature-card:hover {
+      border-color: #2a2a2e;
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--fg-muted);
+      line-height: 1.6;
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      counter-increment: step;
+    }
+
+    .step::before {
+      content: counter(step);
+      font-family: var(--mono);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent);
+      opacity: 0.15;
+      position: absolute;
+      top: 16px;
+      right: 20px;
+    }
+
+    .step h3 {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--fg-muted);
+      line-height: 1.6;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 700px;
+    }
+
+    .price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+    }
+
+    .price-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    .price-badge {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .price-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .price-card .price {
+      font-family: var(--mono);
+      font-size: 36px;
+      font-weight: 700;
+      margin: 16px 0;
+    }
+
+    .price-card .price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--fg-muted);
+    }
+
+    .price-card ul {
+      list-style: none;
+      margin: 20px 0 28px;
+    }
+
+    .price-card li {
+      font-size: 14px;
+      color: var(--fg-muted);
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price-card li::before {
+      content: '~';
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .price-card .btn-primary { width: 100%; text-align: center; display: block; }
+    .price-card .btn-secondary { width: 100%; text-align: center; display: block; }
+
+    /* Use cases */
+    .use-cases {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .use-case {
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.2s;
+    }
+
+    .use-case:hover { border-color: #2a2a2e; }
+
+    .use-case code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .use-case h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .use-case p {
+      font-size: 13px;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 80px 24px 120px;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-section p {
+      color: var(--fg-muted);
+      font-size: 17px;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: var(--fg-dim);
+    }
+
+    footer a {
+      color: var(--fg-muted);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--fg); }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .steps { grid-template-columns: 1fr; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 130px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="icon.png" alt="Pling">
+        <span>pling</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="https://apps.apple.com/app/pling/id6744640074" class="nav-cta">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">~ now available on the App Store</div>
+    <h1>Push notifications<br>for <span>developers</span></h1>
+    <p>Send a push to your iPhone from anywhere. One URL. Works from scripts, CI pipelines, web apps, and AI agents.</p>
+    <div class="hero-buttons">
+      <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Download for iOS</a>
+      <a href="#how" class="btn-secondary">See how it works</a>
+    </div>
+
+    <!-- Terminal demo -->
+    <div class="demo">
+      <div class="demo-window">
+        <div class="demo-titlebar">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <span>terminal</span>
+        </div>
+        <div class="demo-body">
+          <div><span class="dim"># Simple URL &mdash; paste anywhere</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">curl</span> <span class="str">"https://api.plingpush.com/api/push/YOUR_TOKEN?title=Deploy+OK"</span></div>
+          <div style="margin-top: 4px;"><span class="ok">{"ok": true}</span></div>
+          <div style="margin-top: 16px;"><span class="dim"># With message</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">curl -X POST</span> https://api.plingpush.com/api/push \</div>
+          <div>&nbsp;&nbsp;<span class="cmd">-d</span> <span class="str">'{"token":"...","title":"Build done","message":"All 42 tests passed"}'</span></div>
+          <div style="margin-top: 4px;"><span class="ok">{"ok": true}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need, nothing you don't</h2>
+    <p class="section-desc">No SDKs. No configuration. No webhooks to set up. Just a URL and a push notification.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">~</div>
+        <h3>One URL, instant push</h3>
+        <p>GET or POST to a single endpoint. Your iPhone buzzes. That's it. No setup, no registration flow.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">>_</div>
+        <h3>Built-in SSH terminal</h3>
+        <p>Full SSH and Mosh client with Ed25519/RSA keys, port forwarding, jump hosts, and SFTP file manager.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">#</div>
+        <h3>Works from anywhere</h3>
+        <p>curl, Python, JavaScript, GitHub Actions, Zapier, IFTTT, Shortcuts, or just paste the URL in a browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">*</div>
+        <h3>API token security</h3>
+        <p>One token per account. Rotate or revoke instantly. SHA-256 hashed storage. Rate limited to prevent abuse.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">!</div>
+        <h3>Priority levels</h3>
+        <p>Send low, normal, high, or critical. Critical alerts bypass Do Not Disturb so you never miss an outage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">$</div>
+        <h3>AI agent friendly</h3>
+        <p>Paste the curl command in CLAUDE.md or system prompts. Your agent pings you when work is done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Three steps. Thirty seconds.</h2>
+    <p class="section-desc">From zero to push notifications on your phone in under a minute.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h3>Download Pling</h3>
+        <p>Install from the App Store. Sign in with Apple. Upgrade to Pro to unlock push notifications.</p>
+      </div>
+      <div class="step">
+        <h3>Copy your URL</h3>
+        <p>Your API token is auto-generated. Copy the push URL from the app &mdash; it's pre-filled with your token.</p>
+      </div>
+      <div class="step">
+        <h3>Send a push</h3>
+        <p>Paste the URL in a script, CI pipeline, or AI prompt. Every call sends a push notification to your phone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use cases -->
+  <section>
+    <div class="section-label">Use cases</div>
+    <h2 class="section-title">Built for the way you work</h2>
+    <p class="section-desc">Anywhere you can make an HTTP request, you can send yourself a push.</p>
+
+    <div class="use-cases">
+      <div class="use-case">
+        <code>CI/CD</code>
+        <h3>Build & deploy alerts</h3>
+        <p>Get notified when your GitHub Action completes, your Docker build finishes, or a deploy goes live.</p>
+      </div>
+      <div class="use-case">
+        <code>AI agents</code>
+        <h3>Agent task completion</h3>
+        <p>Add one line to CLAUDE.md and Claude Code pings you when it finishes a task.</p>
+      </div>
+      <div class="use-case">
+        <code>Monitoring</code>
+        <h3>Server health checks</h3>
+        <p>Cron job fails? Disk full? SSL expiring? Send a critical push and get woken up.</p>
+      </div>
+      <div class="use-case">
+        <code>Scripts</code>
+        <h3>Long-running tasks</h3>
+        <p>Training a model, running a migration, compiling a kernel &mdash; get pinged when it's done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-desc">SSH terminal is free forever. Push notifications require Pro.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Free</h3>
+        <div class="price">$0</div>
+        <ul>
+          <li>Full SSH & Mosh terminal</li>
+          <li>Unlimited hosts</li>
+          <li>SFTP file manager</li>
+          <li>Port forwarding</li>
+          <li>8 terminal themes</li>
+        </ul>
+        <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-secondary">Get started</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most popular</div>
+        <h3>Pro</h3>
+        <div class="price">$2.99<span>/mo</span></div>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Push notifications</li>
+          <li>API token</li>
+          <li>500 pushes/day</li>
+          <li>Critical alerts (bypass DND)</li>
+        </ul>
+        <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Start free trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Stop checking. Start getting pinged.</h2>
+    <p>Join developers who get instant push notifications from their servers, scripts, and AI agents.</p>
+    <div class="hero-buttons">
+      <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Download for iOS</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Pling &middot; <a href="mailto:hello@plingpush.com">Contact</a> &middot; <a href="https://github.com/Jeramo/pling">GitHub</a></p>
+  </footer>
+
+</body>
+</html>
