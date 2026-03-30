@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Pling</title>
+  <meta name="description" content="Privacy policy for Pling — Push notifications and SSH terminal for iOS.">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #d4d4d8;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+    }
+    h1 {
+      font-family: 'Geist Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fafafa;
+      margin-bottom: 8px;
+    }
+    .updated {
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      color: #71717a;
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-family: 'Geist Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: #f97316;
+      margin-top: 40px;
+      margin-bottom: 12px;
+    }
+    p { margin-bottom: 16px; font-size: 15px; }
+    ul { margin-bottom: 16px; padding-left: 24px; }
+    li { margin-bottom: 6px; font-size: 15px; }
+    a { color: #f97316; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back {
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      color: #71717a;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+    .back:hover { color: #fafafa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back">&larr; back to plingpush.com</a>
+
+    <h1>Privacy policy</h1>
+    <p class="updated">Last updated: March 30, 2026</p>
+
+    <p>Pling ("we", "our", "the app") is a push notification and SSH terminal app for iOS. Your privacy matters to us. This policy explains what data we collect, how we use it, and what we don't touch.</p>
+
+    <h2>1. Information we collect</h2>
+    <p>We collect only what's necessary to provide the service:</p>
+    <ul>
+      <li><strong>Apple ID identifier</strong> — used for Sign in with Apple authentication. We receive an opaque user ID, and optionally your name and email if you choose to share them.</li>
+      <li><strong>API token</strong> — a SHA-256 hashed token stored on our server to authenticate push requests. The raw token is stored in your device's iOS Keychain.</li>
+      <li><strong>Device token</strong> — your APNs device token, used to deliver push notifications to your device.</li>
+      <li><strong>Push notification content</strong> — titles and messages you send via the API are stored temporarily for delivery and retained for up to 90 days (Pro) or 7 days (free).</li>
+      <li><strong>Subscription status</strong> — your Pro/free tier, synced via Apple's StoreKit.</li>
+    </ul>
+
+    <h2>2. Information we do NOT collect</h2>
+    <p>We want to be explicit about what we don't touch:</p>
+    <ul>
+      <li><strong>SSH credentials</strong> — passwords, private keys, and known hosts are stored exclusively in the iOS Keychain on your device. They never leave your phone.</li>
+      <li><strong>Terminal session content</strong> — we do not log, transmit, or store anything you type or see in SSH/Mosh sessions.</li>
+      <li><strong>Location data</strong> — we don't request or collect your location.</li>
+      <li><strong>Analytics or tracking</strong> — no third-party analytics SDKs, no ad networks, no fingerprinting.</li>
+      <li><strong>Contacts, photos, or files</strong> — we don't access these unless you explicitly pick a photo for your avatar.</li>
+    </ul>
+
+    <h2>3. How we use your information</h2>
+    <ul>
+      <li>Authenticate your account (Sign in with Apple)</li>
+      <li>Deliver push notifications to your device via APNs</li>
+      <li>Enforce rate limits and prevent abuse</li>
+      <li>Sync your subscription tier</li>
+    </ul>
+
+    <h2>4. Data storage and security</h2>
+    <ul>
+      <li><strong>Backend:</strong> Cloudflare Workers + D1 (SQLite). Data is processed at Cloudflare's edge, closest to you.</li>
+      <li><strong>API tokens:</strong> stored as SHA-256 hashes. We cannot recover your raw token.</li>
+      <li><strong>SSH keys:</strong> stored in the iOS Keychain with <code>kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code>. They never leave your device.</li>
+      <li><strong>iCloud sync:</strong> if enabled, hosts and snippets sync via CloudKit. SSH keys can optionally sync via iCloud Keychain.</li>
+      <li><strong>E2E encryption:</strong> Pro users can enable end-to-end encryption for push notification content using P-256 ECIES.</li>
+    </ul>
+
+    <h2>5. Third-party services</h2>
+    <ul>
+      <li><strong>Apple Push Notification service (APNs)</strong> — delivers push notifications.</li>
+      <li><strong>Apple Sign in with Apple</strong> — authenticates your account.</li>
+      <li><strong>Apple StoreKit</strong> — handles subscriptions.</li>
+      <li><strong>Cloudflare</strong> — hosts our API backend.</li>
+    </ul>
+    <p>We do not use any third-party analytics, advertising, or tracking services.</p>
+
+    <h2>6. Data retention</h2>
+    <ul>
+      <li>Push notification records are automatically deleted after 7 days (free) or 90 days (Pro).</li>
+      <li>Rate limit counters are cleaned up daily.</li>
+      <li>Account deletion removes all associated data (notifications, tokens, devices, hosts) immediately.</li>
+    </ul>
+
+    <h2>7. Your rights</h2>
+    <p>You can at any time:</p>
+    <ul>
+      <li><strong>Delete your account</strong> — in Settings, which permanently removes all server-side data.</li>
+      <li><strong>Revoke your API token</strong> — immediately stops all push notifications.</li>
+      <li><strong>Sign out</strong> — clears your session.</li>
+      <li><strong>Uninstall the app</strong> — removes all local data including Keychain credentials.</li>
+    </ul>
+
+    <h2>8. Children's privacy</h2>
+    <p>Pling is not directed at children under 13. We do not knowingly collect data from children.</p>
+
+    <h2>9. Changes to this policy</h2>
+    <p>We may update this policy occasionally. Changes will be posted on this page with an updated date.</p>
+
+    <h2>10. Contact</h2>
+    <p>Questions? Email us at <a href="mailto:hello@plingpush.com">hello@plingpush.com</a>.</p>
+  </div>
+</body>
+</html>
