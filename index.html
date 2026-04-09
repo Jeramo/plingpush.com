@@ -453,15 +453,32 @@
 <nav>
   <div class="container">
     <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling"></a>
-    <ul>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#how">How it works</a></li>
-      <li><a href="#cli">CLI</a></li>
-      <li><a href="docs.html">Docs</a></li>
-      <li><a href="support.html">Support</a></li>
-    </ul>
+    <div class="nav-right">
+      <a href="docs.html">Docs</a>
+      <a href="https://apps.apple.com/app/pling/id6744640074" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
+      <button class="hamburger" onclick="document.getElementById('nav-overlay').classList.add('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
   </div>
 </nav>
+
+<div class="nav-overlay" id="nav-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nav-panel">
+    <div class="nav-panel-header">
+      <button class="nav-close" onclick="document.getElementById('nav-overlay').classList.remove('open')" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="#features" onclick="document.getElementById('nav-overlay').classList.remove('open')">Features</a>
+    <a href="#how" onclick="document.getElementById('nav-overlay').classList.remove('open')">How it works</a>
+    <a href="#cli" onclick="document.getElementById('nav-overlay').classList.remove('open')">CLI</a>
+    <a href="docs.html">Docs</a>
+    <a href="support.html">Support</a>
+    <a href="https://github.com/Jeramo/pling">GitHub</a>
+    <a href="mailto:hello@plingpush.com">Contact</a>
+  </div>
+</div>
 
 <section class="hero">
   <div class="container">
