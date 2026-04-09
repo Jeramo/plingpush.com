@@ -21,7 +21,7 @@
     .container {
       max-width: 720px;
       margin: 0 auto;
-      padding: 100px 24px 120px;
+      padding: 80px 24px 120px;
     }
     h1 {
       font-family: 'Geist Mono', monospace;
@@ -49,150 +49,20 @@
     li { margin-bottom: 6px; font-size: 15px; }
     a { color: #f97316; text-decoration: none; }
     a:hover { text-decoration: underline; }
-
-    /* Nav */
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(10, 10, 10, 0.8);
-      border-bottom: 1px solid #1e1e22;
-    }
-    .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .nav-brand img { width: 28px; height: 28px; border-radius: 6px; }
-    .nav-brand span {
-      font-family: 'Geist Mono', monospace;
-      font-size: 16px;
-      font-weight: 700;
-      color: #fafafa;
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .nav-right > a {
-      font-size: 14px;
-      font-weight: 500;
-      color: #71717a;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-right > a:hover { color: #fafafa; }
-    .nav-cta {
+    .back {
       font-family: 'Geist Mono', monospace;
       font-size: 13px;
-      font-weight: 600;
-      color: #0a0a0a;
-      background: #f97316;
-      padding: 7px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .nav-cta:hover { opacity: 0.9; }
-    .hamburger {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
-      background: none;
-      border: 1px solid #1e1e22;
-      border-radius: 8px;
-      padding: 7px;
-      transition: border-color 0.2s;
-    }
-    .hamburger:hover { border-color: #52525b; }
-    .hamburger span {
-      display: block;
-      width: 100%;
-      height: 1.5px;
-      background: #71717a;
-      border-radius: 1px;
-      transition: transform 0.25s, opacity 0.2s;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(3.25px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-3.25px) rotate(-45deg); }
-    .nav-menu {
-      position: absolute;
-      top: 100%;
-      right: 24px;
-      background: #111113;
-      border: 1px solid #1e1e22;
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 180px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-8px);
-      transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
-    }
-    .nav-menu.open {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(4px);
-    }
-    .nav-menu a {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
       color: #71717a;
-      text-decoration: none;
-      padding: 10px 14px;
-      border-radius: 8px;
-      transition: background 0.15s, color 0.15s;
+      display: inline-block;
+      margin-bottom: 24px;
     }
-    .nav-menu a:hover {
-      background: #18181b;
-      color: #fafafa;
-    }
+    .back:hover { color: #fafafa; }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-inner">
-      <a href="/" class="nav-brand">
-        <img src="icon.png" alt="Pling">
-        <span>pling</span>
-      </a>
-      <div class="nav-right">
-        <a href="docs.html">Docs</a>
-        <a href="https://apps.apple.com/app/pling/id6744640074" class="nav-cta">Download</a>
-        <button class="hamburger" onclick="this.classList.toggle('open');document.getElementById('nav-menu').classList.toggle('open')" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-      <div class="nav-menu" id="nav-menu">
-        <a href="/#features">Features</a>
-        <a href="/#how">How it works</a>
-        <a href="/#pricing">Pricing</a>
-        <a href="https://github.com/Jeramo/pling">GitHub</a>
-        <a href="mailto:hello@plingpush.com">Contact</a>
-      </div>
-    </div>
-  </nav>
-
   <div class="container">
+    <a href="/" class="back">&larr; back to plingpush.com</a>
+
     <h1>Privacy policy</h1>
     <p class="updated">Last updated: March 30, 2026</p>
 
@@ -269,15 +139,5 @@
     <h2>10. Contact</h2>
     <p>Questions? Email us at <a href="mailto:hello@plingpush.com">hello@plingpush.com</a>.</p>
   </div>
-  <script>
-    document.addEventListener('click', function(e) {
-      var menu = document.getElementById('nav-menu');
-      var btn = document.querySelector('.hamburger');
-      if (!btn.contains(e.target) && !menu.contains(e.target)) {
-        menu.classList.remove('open');
-        btn.classList.remove('open');
-      }
-    });
-  </script>
 </body>
 </html>
