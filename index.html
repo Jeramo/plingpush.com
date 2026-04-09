@@ -10,16 +10,44 @@
   <meta property="og:description" content="Server notifications + SSH terminal in your pocket. Push alerts via webhook, connect via SSH/Mosh, manage everything from a customizable terminal UI.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://plingpush.com">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Pling — Terminal Notifications for iOS">
   <meta name="twitter:description" content="Server notifications + SSH terminal in your pocket.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://plingpush.com">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:image" content="https://plingpush.com/og-image.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Pling","description":"Server notifications and SSH terminal for iOS","operatingSystem":"iOS","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Pling",
+    "description": "Push notifications and SSH terminal for iOS. Send alerts from scripts, CI pipelines, and AI agents to your iPhone with a single HTTP request.",
+    "operatingSystem": "iOS",
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Developer Tools",
+    "offers": {
+      "@type": "AggregateOffer",
+      "lowPrice": "0",
+      "highPrice": "2.99",
+      "priceCurrency": "USD",
+      "offerCount": "2"
+    },
+    "screenshot": "https://plingpush.com/og-image.png",
+    "url": "https://plingpush.com",
+    "downloadUrl": "https://apps.apple.com/app/pling/id6744640074",
+    "softwareVersion": "1.0.14",
+    "author": {
+      "@type": "Organization",
+      "name": "Jeramo",
+      "url": "https://github.com/Jeramo"
+    },
+    "featureList": "Push notifications, SSH terminal, Mosh support, port forwarding, terminal themes, notification channels, API webhooks, CLI tool, E2E encryption"
+  }
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
@@ -452,7 +480,7 @@
 
 <nav>
   <div class="container">
-    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling"></a>
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling - Push notifications for developers"></a>
     <div class="nav-right">
       <a href="docs.html">Docs</a>
       <a href="https://apps.apple.com/app/pling/id6744640074" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
@@ -512,7 +540,7 @@
 
 <section class="features" id="features">
   <div class="container">
-    <h2>// <span>features</span></h2>
+    <h2><span style="color:var(--fg-dim)">//</span> <span>Features</span></h2>
     <div class="feature-grid">
       <div class="feature-card">
         <h3>Webhook notifications</h3>
@@ -544,7 +572,7 @@
 
 <section class="how" id="how">
   <div class="container">
-    <h2>// <span>how it works</span></h2>
+    <h2><span style="color:var(--fg-dim)">//</span> <span>How it works</span></h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -573,7 +601,7 @@
 
 <section class="cli-section" id="cli">
   <div class="container">
-    <h2>// <span>CLI tool</span></h2>
+    <h2><span style="color:var(--fg-dim)">//</span> <span>CLI tool</span></h2>
     <p>Pipe output directly from your terminal to your phone.</p>
     <div class="cli-example">
       <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">echo "Deploy done" | pling -t "deploy" -p high</span></div>
