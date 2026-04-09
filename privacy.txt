@@ -1,0 +1,86 @@
+# Privacy Policy
+
+**Effective Date: April 8, 2026 (2026-04-08)**
+
+Pling is a push notification and SSH terminal app for iOS. Your privacy matters to us. This policy explains what data we collect, how we use it, and what we don't touch.
+
+---
+
+## 1. Information we collect
+
+- **Apple ID identifier** — Used for Sign in with Apple. We receive an opaque user ID, and optionally your name and email.
+- **API token** — SHA-256 hashed on our server. The raw token lives only in your device's iOS Keychain.
+- **Device token** — Your APNs token, used to deliver push notifications.
+- **Push content** — Titles and messages sent via the API. Retained up to 90 days (Pro) or 7 days (free).
+- **Subscription status** — Your Pro/free tier, managed via RevenueCat and Apple's StoreKit.
+- **Agent metrics** — If you install the Pling Agent on a server, it reports system metrics (CPU, memory, disk, network) to our API for display in the app.
+- **Feedback submissions** — If you submit feedback via the app or website, your email and message are sent to Formspree.
+- **AI queries** — When you use the AI command assistant, your query and a snippet of recent terminal output (up to 3,000 characters) are sent to our backend, which proxies the request to OpenAI. We do not store these queries beyond the duration of the request.
+- **Location (optional, on-device only)** — If you enable location tracking in settings, reduced-accuracy location is used to keep sessions alive in the background and saved to your local connection history. Location data never leaves your device and is not sent to our servers. You can disable this at any time; disabling strips all stored location data.
+- **Live Activity tokens** — On iOS 17+, if Live Activities are enabled, an ActivityKit push token, session count, and host names are sent to our backend to update your lock-screen widget.
+- **Scheduled commands** — If you create agent-based scheduled commands, command metadata (name, schedule, host) and execution output are synced with our backend.
+
+## 2. What we do NOT collect
+
+- **SSH credentials** — Passwords, keys, and known hosts stay in the iOS Keychain. They never leave your phone.
+- **Terminal content** — We don't log or store anything you type or see in SSH/Mosh sessions. Shared sessions relay data through Cloudflare but nothing is persisted. The AI assistant feature sends a short snippet of recent output to OpenAI when you explicitly invoke it — see section 1.
+- **Speech data** — Whisper speech-to-text runs entirely on your phone. If you choose Apple Speech Recognition instead, audio is processed by Apple under their privacy policy. You pick which engine to use in settings.
+- **Analytics** — No analytics SDKs, no ad networks, no fingerprinting.
+- **Files and contacts** — Not accessed unless you pick a photo for your avatar.
+
+## 3. How we use your data
+
+- Authenticate your account (Sign in with Apple)
+- Deliver push notifications via APNs
+- Enforce rate limits and prevent abuse
+- Sync your subscription tier
+- Provide AI command suggestions via OpenAI (when you invoke the assistant)
+- Keep SSH/Mosh sessions alive in background (location, if enabled)
+- Update lock-screen Live Activities with session state
+- Run scheduled commands on your servers via the backend agent
+
+## 4. Storage and security
+
+- **Backend** — Cloudflare Workers + D1 (SQLite), processed at the edge.
+- **API tokens** — Stored as SHA-256 hashes. We can't recover raw tokens.
+- **SSH keys** — iOS Keychain with kSecAttrAccessibleWhenUnlockedThisDeviceOnly.
+- **Session sharing** — Shared terminal sessions relay through Cloudflare Durable Objects. Data is transient and not persisted after the session ends.
+- **iCloud sync** — Optional. Hosts and snippets via CloudKit, keys via iCloud Keychain.
+- **E2E encryption** — Pro users can encrypt push content with P-256 ECIES.
+
+## 5. Third-party services
+
+- Apple Push Notification service (APNs)
+- Apple Sign in with Apple
+- Apple Speech Recognition (optional voice input — processes audio on Apple servers)
+- RevenueCat (subscription management)
+- Cloudflare (API backend, session relay via Durable Objects)
+- OpenAI (AI command assistant — receives query and terminal context snippet)
+- Formspree (feedback form processing)
+- Hugging Face (on-demand download of Whisper speech models)
+
+We do not use any analytics, advertising, or tracking services.
+
+## 6. Data retention
+
+- Notifications auto-deleted after 7 days (free) or 90 days (Pro)
+- Rate limit counters cleaned up daily
+- Account deletion removes all data immediately
+
+## 7. Your rights
+
+- Export your data — download a full copy of everything we store about you (Settings → Account → Export data)
+- Delete your account — permanently removes all server data in a single atomic operation
+- Revoke your API token — stops all push notifications
+- Sign out — clears your session
+- Uninstall — removes all local data including Keychain
+
+These rights are available to all users regardless of location. We honor GDPR data export and erasure requests and log them for compliance.
+
+## 8. Children
+
+Pling is not directed at children under 13.
+
+## 9. Contact
+
+Questions? Email hello@plingpush.com

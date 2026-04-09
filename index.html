@@ -3,741 +3,576 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pling — Push notifications for developers</title>
-  <meta name="description" content="Send push notifications to your iPhone from anywhere. One URL. One tap. Works from scripts, CI, web apps, and AI agents.">
-  <meta name="theme-color" content="#0a0a0a">
-  <meta property="og:title" content="Pling — Push notifications for developers">
-  <meta property="og:description" content="Send push notifications to your iPhone from anywhere. One URL. Works from scripts, CI, web apps, and AI agents.">
+  <title>Pling — Terminal Notifications for iOS</title>
+  <meta name="description" content="Pling brings server notifications and SSH terminal sessions to your iPhone. Push alerts from any webhook, connect via SSH, and stay in control — all from a customizable terminal UI.">
+  <meta name="theme-color" content="#121214">
+  <meta property="og:title" content="Pling — Terminal Notifications for iOS">
+  <meta property="og:description" content="Server notifications + SSH terminal in your pocket. Push alerts via webhook, connect via SSH/Mosh, manage everything from a customizable terminal UI.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://plingpush.com">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Pling — Push notifications for developers">
-  <meta name="twitter:description" content="Send push notifications to your iPhone from anywhere.">
+  <meta name="twitter:title" content="Pling — Terminal Notifications for iOS">
+  <meta name="twitter:description" content="Server notifications + SSH terminal in your pocket.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://plingpush.com">
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Pling","description":"Push notifications for developers. Send from anywhere, receive on iPhone.","operatingSystem":"iOS","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Pling","description":"Server notifications and SSH terminal for iOS","operatingSystem":"iOS","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0a;
-      --bg-card: #111113;
-      --bg-card-hover: #18181b;
-      --border: #1e1e22;
-      --fg: #fafafa;
-      --fg-muted: #71717a;
-      --fg-dim: #52525b;
-      --accent: #f97316;
-      --accent-glow: rgba(249, 115, 22, 0.15);
-      --accent-dim: #c2410c;
-      --mono: 'Geist Mono', monospace;
-      --sans: 'Inter', -apple-system, sans-serif;
-      --radius: 12px;
+      --bg: #121214;
+      --fg: #E8E8EC;
+      --fg-dim: #7A7C87;
+      --fg-bright: #FFFFFF;
+      --accent: #FF6C37;
+      --muted: #333;
+      --surface: #1a1a1e;
+      --border: rgba(255, 255, 255, 0.08);
+      --font: 'Geist', system-ui, sans-serif;
+      --mono: 'GeistMono', ui-monospace, monospace;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: var(--sans);
+      font-family: var(--font);
       background: var(--bg);
       color: var(--fg);
       line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--fg-bright); }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
     /* Nav */
     nav {
       position: fixed;
       top: 0;
-      width: 100%;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(10, 10, 10, 0.8);
+      left: 0;
+      right: 0;
+      background: rgba(18, 18, 20, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 14px 0;
     }
 
-    .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 24px;
+    nav .container {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
-    .nav-brand {
+    .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
-      text-decoration: none;
+      gap: 8px;
     }
 
-    .nav-brand img {
+    .logo .icon {
       width: 28px;
       height: 28px;
       border-radius: 6px;
     }
 
-    .nav-brand span {
-      font-family: var(--mono);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--fg);
+    .logo .wordmark {
+      height: 20px;
+      width: auto;
     }
 
-    .nav-links {
+    .nav-right {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 20px;
     }
 
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--fg-muted);
-      text-decoration: none;
-      transition: color 0.2s;
+    .nav-right > a {
+      font-size: 0.85rem;
+      color: var(--fg-dim);
+      transition: color 0.15s;
     }
 
-    .nav-links a:hover { color: var(--fg); }
+    .nav-right > a:hover { color: var(--fg); }
 
-    .nav-cta {
-      font-family: var(--mono) !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: var(--bg) !important;
-      background: var(--accent);
-      padding: 7px 16px;
-      border-radius: 8px;
-      transition: opacity 0.2s;
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .nav-cta:hover { opacity: 0.9; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .hamburger line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; transition: stroke 0.15s; }
+    .hamburger:hover line { stroke: var(--fg); }
+
+    /* Slide-in panel */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .nav-overlay.open { opacity: 1; visibility: visible; }
+
+    .nav-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 260px;
+      background: #1a1a1e;
+      border-left: 1px solid var(--border);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+
+    .nav-overlay.open .nav-panel { transform: translateX(0); }
+
+    .nav-panel-header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 20px 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .nav-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-close svg { width: 20px; height: 20px; }
+    .nav-close line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; }
+    .nav-close:hover line { stroke: var(--fg); }
+
+    .nav-panel a {
+      display: block;
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      color: var(--fg-dim);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-panel a:hover { color: var(--fg); background: rgba(255, 255, 255, 0.04); }
 
     /* Hero */
     .hero {
-      padding: 160px 24px 100px;
+      padding: 160px 0 80px;
       text-align: center;
-      position: relative;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--accent-glow);
-      border: 1px solid rgba(249, 115, 22, 0.2);
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 28px;
     }
 
     .hero h1 {
-      font-family: var(--sans);
-      font-size: clamp(36px, 6vw, 64px);
+      font-size: clamp(2rem, 5vw, 3.2rem);
       font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      position: relative;
+      margin-bottom: 16px;
+      line-height: 1.2;
     }
 
-    .hero h1 span { color: var(--accent); }
-
-    .hero p {
-      font-size: clamp(16px, 2vw, 19px);
-      color: var(--fg-muted);
-      max-width: 540px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--bg);
+    .hero h1 .cursor {
+      display: inline-block;
+      width: 0.6em;
+      height: 1.1em;
       background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero .subtitle {
+      font-size: 1.05rem;
+      color: var(--fg-dim);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .hero .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #fff;
       padding: 12px 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      font-family: var(--font);
+      transition: background 0.2s, transform 0.15s;
     }
 
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .hero .cta:hover {
+      background: #ff8a5c;
+      color: #fff;
+      transform: translateY(-1px);
+    }
 
-    .btn-secondary {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--fg);
-      background: var(--bg-card);
-      padding: 12px 28px;
-      border-radius: 10px;
+    .hero .cta svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Terminal window mockup */
+    .terminal-window {
+      max-width: 640px;
+      margin: 48px auto 0;
+      background: var(--surface);
       border: 1px solid var(--border);
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover { background: var(--bg-card-hover); border-color: #2a2a2e; }
-
-    /* Code demo */
-    .demo {
-      max-width: 680px;
-      margin: 60px auto 0;
-      position: relative;
-    }
-
-    .demo-window {
-      background: #0d0d0f;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 8px;
       overflow: hidden;
+      text-align: left;
+      box-shadow: 0 0 60px rgba(255, 108, 55, 0.06);
     }
 
-    .demo-titlebar {
+    .terminal-bar {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 12px 16px;
-      background: #111113;
-      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      padding: 10px 14px;
+      background: #161618;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .demo-dot {
-      width: 10px;
-      height: 10px;
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      background: var(--fg-dim);
-      opacity: 0.3;
     }
 
-    .demo-titlebar span {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--fg-dim);
-      margin-left: 8px;
+    .terminal-dot.r { background: #ff5f56; }
+    .terminal-dot.y { background: #ffbd2e; }
+    .terminal-dot.g { background: #27c93f; }
+
+    .terminal-bar span {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
     }
 
-    .demo-body {
-      padding: 20px 24px;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-x: auto;
-    }
-
-    .demo-body .prompt { color: var(--accent); }
-    .demo-body .cmd { color: #d4d4d8; }
-    .demo-body .str { color: #a3e635; }
-    .demo-body .dim { color: var(--fg-dim); }
-    .demo-body .ok { color: #4ade80; }
-
-    /* Section */
-    section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 100px 24px;
-    }
-
-    .section-label {
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-
-    .section-desc {
-      font-size: 17px;
-      color: var(--fg-muted);
-      max-width: 560px;
+    .terminal-body {
+      padding: 16px 18px;
+      font-size: 0.82rem;
       line-height: 1.7;
-      margin-bottom: 48px;
+      min-height: 180px;
     }
 
-    /* Feature grid */
-    .features-grid {
+    .terminal-body { font-family: var(--mono); }
+
+    .terminal-body .prompt { color: var(--fg-dim); }
+    .terminal-body .cmd { color: var(--fg); font-weight: 500; }
+    .terminal-body .out { color: var(--fg-dim); }
+    .terminal-body .ok { color: var(--accent); }
+    .terminal-body .hi { color: #ffbd2e; }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 48px;
+      color: var(--fg-dim);
+    }
+
+    .features h2 span { color: var(--fg); }
+
+    .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
     }
 
     .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      transition: all 0.25s;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 24px;
+      transition: border-color 0.2s;
     }
 
-    .feature-card:hover {
-      border-color: #2a2a2e;
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-    }
-
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--accent-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: 16px;
-    }
+    .feature-card:hover { border-color: var(--accent); }
 
     .feature-card h3 {
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
     .feature-card p {
-      font-size: 14px;
-      color: var(--fg-muted);
-      line-height: 1.6;
+      font-size: 0.8rem;
+      color: var(--fg-dim);
+      line-height: 1.5;
     }
 
     /* How it works */
+    .how {
+      padding: 60px 0 80px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .how h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      color: var(--fg-dim);
+    }
+
+    .how h2 span { color: var(--fg); }
+
     .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      counter-reset: step;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 560px;
+      margin: 0 auto;
     }
 
     .step {
-      position: relative;
-      padding: 28px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
     }
 
-    .step::before {
-      content: counter(step);
-      font-family: var(--mono);
-      font-size: 48px;
+    .step-num {
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--accent);
-      opacity: 0.15;
-      position: absolute;
-      top: 16px;
-      right: 20px;
+      flex-shrink: 0;
+      width: 32px;
     }
 
-    .step h3 {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .step p {
-      font-size: 14px;
-      color: var(--fg-muted);
-      line-height: 1.6;
-    }
-
-    /* Pricing */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 700px;
-    }
-
-    .price-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      position: relative;
-    }
-
-    .price-card.featured {
-      border-color: var(--accent);
-      box-shadow: 0 0 40px var(--accent-glow);
-    }
-
-    .price-badge {
-      position: absolute;
-      top: -10px;
-      right: 20px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--bg);
-      background: var(--accent);
-      padding: 3px 10px;
-      border-radius: 6px;
-    }
-
-    .price-card h3 {
-      font-size: 18px;
+    .step-text h3 {
+      font-size: 0.9rem;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
-    .price-card .price {
-      font-family: var(--mono);
-      font-size: 36px;
-      font-weight: 700;
-      margin: 16px 0;
+    .step-text p {
+      font-size: 0.8rem;
+      color: var(--fg-dim);
     }
 
-    .price-card .price span {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--fg-muted);
+    .step-text code {
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .price-card ul {
-      list-style: none;
-      margin: 20px 0 28px;
-    }
-
-    .price-card li {
-      font-size: 14px;
-      color: var(--fg-muted);
-      padding: 6px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .price-card li::before {
-      content: '~';
-      font-family: var(--mono);
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .price-card .btn-primary { width: 100%; text-align: center; display: block; }
-    .price-card .btn-secondary { width: 100%; text-align: center; display: block; }
-
-    /* Use cases */
-    .use-cases {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .use-case {
-      padding: 24px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: border-color 0.2s;
-    }
-
-    .use-case:hover { border-color: #2a2a2e; }
-
-    .use-case code {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
-      background: var(--accent-glow);
-      padding: 3px 8px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-
-    .use-case h3 {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .use-case p {
-      font-size: 13px;
-      color: var(--fg-muted);
-      line-height: 1.5;
-    }
-
-    /* CTA */
-    .cta-section {
+    /* CLI */
+    .cli-section {
+      padding: 60px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       text-align: center;
-      padding: 80px 24px 120px;
     }
 
-    .cta-section h2 {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
+    .cli-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--fg-dim);
     }
 
-    .cta-section p {
-      color: var(--fg-muted);
-      font-size: 17px;
-      margin-bottom: 32px;
+    .cli-section h2 span { color: var(--fg); }
+
+    .cli-section p {
+      font-size: 0.85rem;
+      color: var(--fg-dim);
+      margin-bottom: 24px;
+    }
+
+    .cli-example {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 18px 24px;
+      text-align: left;
+      font-size: 0.8rem;
+      display: inline-block;
+      max-width: 100%;
+      overflow-x: auto;
     }
 
     /* Footer */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 24px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
     }
 
-    footer p {
-      font-size: 13px;
-      color: var(--fg-dim);
-    }
+    footer a { color: var(--fg-dim); }
 
-    footer a {
-      color: var(--fg-muted);
-      text-decoration: none;
-    }
-
-    footer a:hover { color: var(--fg); }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr; }
-      .nav-links a:not(.nav-cta) { display: none; }
-      .hero { padding: 130px 20px 60px; }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero { padding: 130px 0 60px; }
+      .terminal-body { font-size: 0.72rem; }
+      .feature-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
-  <nav>
-    <div class="nav-inner">
-      <a href="/" class="nav-brand">
-        <img src="icon.png" alt="Pling">
-        <span>pling</span>
-      </a>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how">How it works</a>
-        <a href="#pricing">Pricing</a>
-        <a href="https://apps.apple.com/app/pling/id6744640074" class="nav-cta">Download</a>
+<nav>
+  <div class="container">
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling"></a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#cli">CLI</a></li>
+      <li><a href="docs.html">Docs</a></li>
+      <li><a href="support.html">Support</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Server alerts.<br>SSH terminal.<br>Your pocket<span class="cursor"></span></h1>
+    <p class="subtitle">Pling pushes server notifications to your iPhone and puts a full SSH terminal in your hands — with customizable terminal themes and GPU-rendered effects.</p>
+    <a href="https://apps.apple.com/app/pling/id6744640074" class="cta">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+
+    <div class="terminal-window">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <span>pling &mdash; notifications</span>
       </div>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-badge">~ now available on the App Store</div>
-    <h1>Push notifications<br>for <span>developers</span></h1>
-    <p>Send a push to your iPhone from anywhere. One URL. Works from scripts, CI pipelines, web apps, and AI agents.</p>
-    <div class="hero-buttons">
-      <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Download for iOS</a>
-      <a href="#how" class="btn-secondary">See how it works</a>
-    </div>
-
-    <!-- Terminal demo -->
-    <div class="demo">
-      <div class="demo-window">
-        <div class="demo-titlebar">
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <span>terminal</span>
-        </div>
-        <div class="demo-body">
-          <div><span class="dim"># Simple URL &mdash; paste anywhere</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">curl</span> <span class="str">"https://api.plingpush.com/api/push/YOUR_TOKEN?title=Deploy+OK"</span></div>
-          <div style="margin-top: 4px;"><span class="ok">{"ok": true}</span></div>
-          <div style="margin-top: 16px;"><span class="dim"># With message</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">curl -X POST</span> https://api.plingpush.com/api/push \</div>
-          <div>&nbsp;&nbsp;<span class="cmd">-d</span> <span class="str">'{"token":"...","title":"Build done","message":"All 42 tests passed"}'</span></div>
-          <div style="margin-top: 4px;"><span class="ok">{"ok": true}</span></div>
-        </div>
+      <div class="terminal-body">
+        <div><span class="prompt">$</span> <span class="cmd">curl -X POST https://api.plingpush.com/api/push \</span></div>
+        <div>&nbsp;&nbsp;<span class="cmd">-H "Content-Type: application/json" \</span></div>
+        <div>&nbsp;&nbsp;<span class="cmd">-d '{"token":"YOUR_TOKEN","title":"Deploy OK"}'</span></div>
+        <div><span class="ok">{"ok":true,"id":"notif_a7x9k2"}</span></div>
+        <div>&nbsp;</div>
+        <div><span class="prompt">[14:32]</span> <span class="hi">HIGH</span> <span class="out">deploy</span> <span class="cmd">Production deploy completed</span></div>
+        <div><span class="prompt">[14:31]</span> <span class="out">monitor</span> <span class="cmd">CPU usage back to normal</span></div>
+        <div><span class="prompt">[14:28]</span> <span class="hi">CRIT</span> <span class="out">alert</span> <span class="cmd">Disk usage above 90% on db-01</span></div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Features -->
-  <section id="features">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Everything you need, nothing you don't</h2>
-    <p class="section-desc">No SDKs. No configuration. No webhooks to set up. Just a URL and a push notification.</p>
-
-    <div class="features-grid">
+<section class="features" id="features">
+  <div class="container">
+    <h2>// <span>features</span></h2>
+    <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-icon">~</div>
-        <h3>One URL, instant push</h3>
-        <p>GET or POST to a single endpoint. Your iPhone buzzes. That's it. No setup, no registration flow.</p>
+        <h3>Webhook notifications</h3>
+        <p>POST to a single endpoint. Get instant push notifications on your phone. Supports priority levels, channels, and custom actions.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">>_</div>
-        <h3>Built-in SSH terminal</h3>
-        <p>Full SSH and Mosh client with Ed25519/RSA keys, port forwarding, jump hosts, and SFTP file manager.</p>
+        <h3>SSH terminal</h3>
+        <p>Full terminal via Citadel SSH. Ed25519, P-256, RSA keys. Password and key-based auth. Multiple concurrent sessions.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">#</div>
-        <h3>Works from anywhere</h3>
-        <p>curl, Python, JavaScript, GitHub Actions, Zapier, IFTTT, Shortcuts, or just paste the URL in a browser.</p>
+        <h3>Custom sounds</h3>
+        <p>6 built-in terminal sounds or import your own. Per-channel sound assignment. Critical alerts bypass Do Not Disturb.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">*</div>
-        <h3>API token security</h3>
-        <p>One token per account. Rotate or revoke instantly. SHA-256 hashed storage. Rate limited to prevent abuse.</p>
+        <h3>Port forwarding</h3>
+        <p>Local and remote port forwarding through SSH tunnels. Access remote databases and services from your phone.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">!</div>
-        <h3>Priority levels</h3>
-        <p>Send low, normal, high, or critical. Critical alerts bypass Do Not Disturb so you never miss an outage.</p>
+        <h3>Channels and rules</h3>
+        <p>Organize notifications by channel. Create rules to mute, forward, or change priority. Schedule quiet hours per channel.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">$</div>
-        <h3>AI agent friendly</h3>
-        <p>Paste the curl command in CLAUDE.md or system prompts. Your agent pings you when work is done.</p>
+        <h3>Terminal themes</h3>
+        <p>8 built-in themes with Metal GPU scanlines, glow, and vignette effects. Full color and font customization.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- How it works -->
-  <section id="how">
-    <div class="section-label">How it works</div>
-    <h2 class="section-title">Three steps. Thirty seconds.</h2>
-    <p class="section-desc">From zero to push notifications on your phone in under a minute.</p>
-
+<section class="how" id="how">
+  <div class="container">
+    <h2>// <span>how it works</span></h2>
     <div class="steps">
       <div class="step">
-        <h3>Download Pling</h3>
-        <p>Install from the App Store. Sign in with Apple. Upgrade to Pro to unlock push notifications.</p>
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h3>Create a token</h3>
+          <p>Open Pling, go to Config &gt; Tokens, and generate an API token.</p>
+        </div>
       </div>
       <div class="step">
-        <h3>Copy your URL</h3>
-        <p>Your API token is auto-generated. Copy the push URL from the app &mdash; it's pre-filled with your token.</p>
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h3>Send a notification</h3>
+          <p>POST to <code>/api/push</code> with your token, title, and optional message, priority, and channel.</p>
+        </div>
       </div>
       <div class="step">
-        <h3>Send a push</h3>
-        <p>Paste the URL in a script, CI pipeline, or AI prompt. Every call sends a push notification to your phone.</p>
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h3>Get alerted instantly</h3>
+          <p>Notifications appear in your feed via WebSocket in real-time, or as a push notification when the app is closed.</p>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Use cases -->
-  <section>
-    <div class="section-label">Use cases</div>
-    <h2 class="section-title">Built for the way you work</h2>
-    <p class="section-desc">Anywhere you can make an HTTP request, you can send yourself a push.</p>
-
-    <div class="use-cases">
-      <div class="use-case">
-        <code>CI/CD</code>
-        <h3>Build & deploy alerts</h3>
-        <p>Get notified when your GitHub Action completes, your Docker build finishes, or a deploy goes live.</p>
-      </div>
-      <div class="use-case">
-        <code>AI agents</code>
-        <h3>Agent task completion</h3>
-        <p>Add one line to CLAUDE.md and Claude Code pings you when it finishes a task.</p>
-      </div>
-      <div class="use-case">
-        <code>Monitoring</code>
-        <h3>Server health checks</h3>
-        <p>Cron job fails? Disk full? SSL expiring? Send a critical push and get woken up.</p>
-      </div>
-      <div class="use-case">
-        <code>Scripts</code>
-        <h3>Long-running tasks</h3>
-        <p>Training a model, running a migration, compiling a kernel &mdash; get pinged when it's done.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing -->
-  <section id="pricing">
-    <div class="section-label">Pricing</div>
-    <h2 class="section-title">Simple, transparent pricing</h2>
-    <p class="section-desc">SSH terminal is free forever. Push notifications require Pro.</p>
-
-    <div class="pricing-grid">
-      <div class="price-card">
-        <h3>Free</h3>
-        <div class="price">$0</div>
-        <ul>
-          <li>Full SSH & Mosh terminal</li>
-          <li>Unlimited hosts</li>
-          <li>SFTP file manager</li>
-          <li>Port forwarding</li>
-          <li>8 terminal themes</li>
-        </ul>
-        <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-secondary">Get started</a>
-      </div>
-      <div class="price-card featured">
-        <div class="price-badge">Most popular</div>
-        <h3>Pro</h3>
-        <div class="price">$2.99<span>/mo</span></div>
-        <ul>
-          <li>Everything in Free</li>
-          <li>Push notifications</li>
-          <li>API token</li>
-          <li>500 pushes/day</li>
-          <li>Critical alerts (bypass DND)</li>
-        </ul>
-        <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Start free trial</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <div class="cta-section">
-    <h2>Stop checking. Start getting pinged.</h2>
-    <p>Join developers who get instant push notifications from their servers, scripts, and AI agents.</p>
-    <div class="hero-buttons">
-      <a href="https://apps.apple.com/app/pling/id6744640074" class="btn-primary">Download for iOS</a>
     </div>
   </div>
+</section>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Pling &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="mailto:hello@plingpush.com">Contact</a> &middot; <a href="https://github.com/Jeramo/pling">GitHub</a></p>
-  </footer>
+<section class="cli-section" id="cli">
+  <div class="container">
+    <h2>// <span>CLI tool</span></h2>
+    <p>Pipe output directly from your terminal to your phone.</p>
+    <div class="cli-example">
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">echo "Deploy done" | pling -t "deploy" -p high</span></div>
+      <div>&nbsp;</div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">tail -f /var/log/syslog | pling -t "syslog" --stream</span></div>
+      <div>&nbsp;</div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">make build 2>&1 | pling -t "Build result"</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
 
 </body>
 </html>

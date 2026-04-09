@@ -3,141 +3,271 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — Pling</title>
-  <meta name="description" content="Privacy policy for Pling — Push notifications and SSH terminal for iOS.">
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Pling — Privacy policy</title>
+  <meta name="description" content="Pling privacy policy. What data we collect, how we use it, and what we don't touch.">
+  <meta name="theme-color" content="#121214">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #121214;
+      --fg: #E8E8EC;
+      --fg-dim: #7A7C87;
+      --accent: #FF6C37;
+      --surface: #1a1a1e;
+      --border: rgba(255, 255, 255, 0.08);
+      --font: 'Geist', system-ui, sans-serif;
+    }
+
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: #0a0a0a;
-      color: #d4d4d8;
-      line-height: 1.8;
-      -webkit-font-smoothing: antialiased;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      min-height: 100vh;
     }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #fff; }
+
     .container {
-      max-width: 720px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 80px 24px 120px;
+      padding: 0 24px;
     }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18, 18, 20, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 14px 0;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo .icon { width: 28px; height: 28px; border-radius: 6px; }
+    .logo .wordmark { height: 20px; width: auto; }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      font-size: 0.85rem;
+    }
+
+    nav ul a { color: var(--fg-dim); }
+    nav ul a:hover { color: var(--fg); }
+
+    /* Content */
+    .content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 120px 24px 60px;
+    }
+
     h1 {
-      font-family: 'Geist Mono', monospace;
-      font-size: 32px;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #fafafa;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
+
     .updated {
-      font-family: 'Geist Mono', monospace;
-      font-size: 13px;
-      color: #71717a;
-      margin-bottom: 40px;
+      font-size: 0.8rem;
+      color: var(--fg-dim);
+      margin-bottom: 28px;
     }
+
+    .intro {
+      font-size: 0.9rem;
+      color: var(--fg-dim);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
     h2 {
-      font-family: 'Geist Mono', monospace;
-      font-size: 18px;
-      font-weight: 600;
-      color: #f97316;
-      margin-top: 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 32px;
       margin-bottom: 12px;
     }
-    p { margin-bottom: 16px; font-size: 15px; }
-    ul { margin-bottom: 16px; padding-left: 24px; }
-    li { margin-bottom: 6px; font-size: 15px; }
-    a { color: #f97316; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .back {
-      font-family: 'Geist Mono', monospace;
-      font-size: 13px;
-      color: #71717a;
-      display: inline-block;
-      margin-bottom: 24px;
+
+    p {
+      font-size: 0.85rem;
+      color: rgba(232, 232, 236, 0.85);
+      line-height: 1.7;
+      margin-bottom: 12px;
     }
-    .back:hover { color: #fafafa; }
+
+    ul {
+      list-style: none;
+      margin-bottom: 12px;
+    }
+
+    ul li {
+      font-size: 0.85rem;
+      color: rgba(232, 232, 236, 0.85);
+      line-height: 1.7;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    ul li::before {
+      content: "~";
+      position: absolute;
+      left: 0;
+      color: var(--fg-dim);
+      font-weight: 700;
+    }
+
+    ul li strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: center;
+      font-size: 0.75rem;
+      color: #333;
+    }
+
+    footer a { color: var(--fg-dim); }
+
+    @media (max-width: 600px) {
+      nav ul { gap: 16px; font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
+
+<nav>
   <div class="container">
-    <a href="/" class="back">&larr; back to plingpush.com</a>
-
-    <h1>Privacy policy</h1>
-    <p class="updated">Last updated: March 30, 2026</p>
-
-    <p>Pling ("we", "our", "the app") is a push notification and SSH terminal app for iOS. Your privacy matters to us. This policy explains what data we collect, how we use it, and what we don't touch.</p>
-
-    <h2>1. Information we collect</h2>
-    <p>We collect only what's necessary to provide the service:</p>
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling"></a>
     <ul>
-      <li><strong>Apple ID identifier</strong> — used for Sign in with Apple authentication. We receive an opaque user ID, and optionally your name and email if you choose to share them.</li>
-      <li><strong>API token</strong> — a SHA-256 hashed token stored on our server to authenticate push requests. The raw token is stored in your device's iOS Keychain.</li>
-      <li><strong>Device token</strong> — your APNs device token, used to deliver push notifications to your device.</li>
-      <li><strong>Push notification content</strong> — titles and messages you send via the API are stored temporarily for delivery and retained for up to 90 days (Pro) or 7 days (free).</li>
-      <li><strong>Subscription status</strong> — your Pro/free tier, synced via Apple's StoreKit.</li>
+      <li><a href="/">Home</a></li>
+      <li><a href="support.html">Support</a></li>
     </ul>
-
-    <h2>2. Information we do NOT collect</h2>
-    <p>We want to be explicit about what we don't touch:</p>
-    <ul>
-      <li><strong>SSH credentials</strong> — passwords, private keys, and known hosts are stored exclusively in the iOS Keychain on your device. They never leave your phone.</li>
-      <li><strong>Terminal session content</strong> — we do not log, transmit, or store anything you type or see in SSH/Mosh sessions.</li>
-      <li><strong>Location data</strong> — we don't request or collect your location.</li>
-      <li><strong>Analytics or tracking</strong> — no third-party analytics SDKs, no ad networks, no fingerprinting.</li>
-      <li><strong>Contacts, photos, or files</strong> — we don't access these unless you explicitly pick a photo for your avatar.</li>
-    </ul>
-
-    <h2>3. How we use your information</h2>
-    <ul>
-      <li>Authenticate your account (Sign in with Apple)</li>
-      <li>Deliver push notifications to your device via APNs</li>
-      <li>Enforce rate limits and prevent abuse</li>
-      <li>Sync your subscription tier</li>
-    </ul>
-
-    <h2>4. Data storage and security</h2>
-    <ul>
-      <li><strong>Backend:</strong> Cloudflare Workers + D1 (SQLite). Data is processed at Cloudflare's edge, closest to you.</li>
-      <li><strong>API tokens:</strong> stored as SHA-256 hashes. We cannot recover your raw token.</li>
-      <li><strong>SSH keys:</strong> stored in the iOS Keychain with <code>kSecAttrAccessibleWhenUnlockedThisDeviceOnly</code>. They never leave your device.</li>
-      <li><strong>iCloud sync:</strong> if enabled, hosts and snippets sync via CloudKit. SSH keys can optionally sync via iCloud Keychain.</li>
-      <li><strong>E2E encryption:</strong> Pro users can enable end-to-end encryption for push notification content using P-256 ECIES.</li>
-    </ul>
-
-    <h2>5. Third-party services</h2>
-    <ul>
-      <li><strong>Apple Push Notification service (APNs)</strong> — delivers push notifications.</li>
-      <li><strong>Apple Sign in with Apple</strong> — authenticates your account.</li>
-      <li><strong>Apple StoreKit</strong> — handles subscriptions.</li>
-      <li><strong>Cloudflare</strong> — hosts our API backend.</li>
-    </ul>
-    <p>We do not use any third-party analytics, advertising, or tracking services.</p>
-
-    <h2>6. Data retention</h2>
-    <ul>
-      <li>Push notification records are automatically deleted after 7 days (free) or 90 days (Pro).</li>
-      <li>Rate limit counters are cleaned up daily.</li>
-      <li>Account deletion removes all associated data (notifications, tokens, devices, hosts) immediately.</li>
-    </ul>
-
-    <h2>7. Your rights</h2>
-    <p>You can at any time:</p>
-    <ul>
-      <li><strong>Delete your account</strong> — in Settings, which permanently removes all server-side data.</li>
-      <li><strong>Revoke your API token</strong> — immediately stops all push notifications.</li>
-      <li><strong>Sign out</strong> — clears your session.</li>
-      <li><strong>Uninstall the app</strong> — removes all local data including Keychain credentials.</li>
-    </ul>
-
-    <h2>8. Children's privacy</h2>
-    <p>Pling is not directed at children under 13. We do not knowingly collect data from children.</p>
-
-    <h2>9. Changes to this policy</h2>
-    <p>We may update this policy occasionally. Changes will be posted on this page with an updated date.</p>
-
-    <h2>10. Contact</h2>
-    <p>Questions? Email us at <a href="mailto:hello@plingpush.com">hello@plingpush.com</a>.</p>
   </div>
+</nav>
+
+<div class="content">
+  <h1>Privacy policy</h1>
+  <p class="updated">Last updated: April 8, 2026</p>
+
+  <p class="intro">Pling is a push notification and SSH terminal app for iOS. Your privacy matters to us. This policy explains what data we collect, how we use it, and what we don't touch.</p>
+
+  <h2>1. Information we collect</h2>
+  <ul>
+    <li><strong>Apple ID identifier</strong> — Used for Sign in with Apple. We receive an opaque user ID, and optionally your name and email.</li>
+    <li><strong>API token</strong> — SHA-256 hashed on our server. The raw token lives only in your device's iOS Keychain.</li>
+    <li><strong>Device token</strong> — Your APNs token, used to deliver push notifications.</li>
+    <li><strong>Push content</strong> — Titles and messages sent via the API. Retained up to 90 days (Pro) or 7 days (free).</li>
+    <li><strong>Subscription status</strong> — Your Pro/free tier, managed via RevenueCat and Apple's StoreKit.</li>
+    <li><strong>Agent metrics</strong> — If you install the Pling Agent on a server, it reports system metrics (CPU, memory, disk, network) to our API for display in the app.</li>
+    <li><strong>Feedback submissions</strong> — If you submit feedback via the app or website, your email and message are sent to Formspree.</li>
+    <li><strong>AI queries</strong> — When you use the AI command assistant, your query and a snippet of recent terminal output (up to 3,000 characters) are sent to our backend, which proxies the request to OpenAI. We do not store these queries beyond the duration of the request.</li>
+    <li><strong>Location (optional, on-device only)</strong> — If you enable location tracking in settings, reduced-accuracy location is used to keep sessions alive in the background and saved to your local connection history. Location data never leaves your device and is not sent to our servers. You can disable this at any time; disabling strips all stored location data.</li>
+    <li><strong>Live Activity tokens</strong> — On iOS 17+, if Live Activities are enabled, an ActivityKit push token, session count, and host names are sent to our backend to update your lock-screen widget.</li>
+    <li><strong>Scheduled commands</strong> — If you create agent-based scheduled commands, command metadata (name, schedule, host) and execution output are synced with our backend.</li>
+  </ul>
+
+  <h2>2. What we do NOT collect</h2>
+  <ul>
+    <li><strong>SSH credentials</strong> — Passwords, keys, and known hosts stay in the iOS Keychain. They never leave your phone.</li>
+    <li><strong>Terminal content</strong> — We don't log or store anything you type or see in SSH/Mosh sessions. Shared sessions relay data through Cloudflare but nothing is persisted. The AI assistant feature sends a short snippet of recent output to OpenAI when you explicitly invoke it — see section 1.</li>
+    <li><strong>Speech data</strong> — Whisper speech-to-text runs entirely on your phone. If you choose Apple Speech Recognition instead, audio is processed by Apple under their privacy policy. You pick which engine to use in settings.</li>
+    <li><strong>Analytics</strong> — No analytics SDKs, no ad networks, no fingerprinting.</li>
+    <li><strong>Files and contacts</strong> — Not accessed unless you pick a photo for your avatar.</li>
+  </ul>
+
+  <h2>3. How we use your data</h2>
+  <ul>
+    <li>Authenticate your account (Sign in with Apple)</li>
+    <li>Deliver push notifications via APNs</li>
+    <li>Enforce rate limits and prevent abuse</li>
+    <li>Sync your subscription tier</li>
+    <li>Provide AI command suggestions via OpenAI (when you invoke the assistant)</li>
+    <li>Keep SSH/Mosh sessions alive in background (location, if enabled)</li>
+    <li>Update lock-screen Live Activities with session state</li>
+    <li>Run scheduled commands on your servers via the backend agent</li>
+  </ul>
+
+  <h2>4. Storage and security</h2>
+  <ul>
+    <li><strong>Backend</strong> — Cloudflare Workers + D1 (SQLite), processed at the edge.</li>
+    <li><strong>API tokens</strong> — Stored as SHA-256 hashes. We can't recover raw tokens.</li>
+    <li><strong>SSH keys</strong> — iOS Keychain with kSecAttrAccessibleWhenUnlockedThisDeviceOnly.</li>
+    <li><strong>Session sharing</strong> — Shared terminal sessions relay through Cloudflare Durable Objects. Data is transient and not persisted after the session ends.</li>
+    <li><strong>iCloud sync</strong> — Optional. Hosts and snippets via CloudKit, keys via iCloud Keychain.</li>
+    <li><strong>E2E encryption</strong> — Pro users can encrypt push content with P-256 ECIES.</li>
+  </ul>
+
+  <h2>5. Third-party services</h2>
+  <ul>
+    <li>Apple Push Notification service (APNs)</li>
+    <li>Apple Sign in with Apple</li>
+    <li>Apple Speech Recognition (optional voice input — processes audio on Apple servers)</li>
+    <li>RevenueCat (subscription management)</li>
+    <li>Cloudflare (API backend, session relay via Durable Objects)</li>
+    <li>OpenAI (AI command assistant — receives query and terminal context snippet)</li>
+    <li>Formspree (feedback form processing)</li>
+    <li>Hugging Face (on-demand download of Whisper speech models)</li>
+  </ul>
+  <p>We do not use any analytics, advertising, or tracking services.</p>
+
+  <h2>6. Data retention</h2>
+  <ul>
+    <li>Notifications auto-deleted after 7 days (free) or 90 days (Pro)</li>
+    <li>Rate limit counters cleaned up daily</li>
+    <li>Account deletion removes all data immediately</li>
+  </ul>
+
+  <h2>7. Your rights</h2>
+  <ul>
+    <li>Export your data — download a full copy of everything we store about you (Settings → Account → Export data)</li>
+    <li>Delete your account — permanently removes all server data in a single atomic operation</li>
+    <li>Revoke your API token — stops all push notifications</li>
+    <li>Sign out — clears your session</li>
+    <li>Uninstall — removes all local data including Keychain</li>
+  </ul>
+  <p>These rights are available to all users regardless of location. We honor GDPR data export and erasure requests and log them for compliance.</p>
+  </ul>
+
+  <h2>8. Children</h2>
+  <p>Pling is not directed at children under 13.</p>
+
+  <h2>9. Contact</h2>
+  <p>Questions? Email <a href="mailto:hello@plingpush.com">hello@plingpush.com</a></p>
+</div>
+
+<footer>
+  <div class="container">
+    <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
+
 </body>
 </html>
