@@ -3,31 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pling — Terminal Notifications for iOS</title>
-  <meta name="description" content="Pling brings server notifications and SSH terminal sessions to your iPhone. Push alerts from any webhook, connect via SSH, and stay in control — all from a customizable terminal UI.">
+  <title>Pling — Push notifications & SSH terminal for iPhone</title>
+  <meta name="description" content="Push notifications and SSH terminal for iPhone. Send webhook alerts, run a full SSH/Mosh terminal, port-forward, and report server metrics from a host agent.">
+  <meta name="keywords" content="iOS push notifications, SSH client iPhone, Mosh iOS, webhook to iPhone, server alerts, SSH terminal app, port forwarding iOS, server monitoring agent, push notification API">
+  <meta name="author" content="Pling">
+  <meta name="application-name" content="Pling">
+  <meta name="apple-itunes-app" content="app-id=6761271025">
   <meta name="theme-color" content="#121214">
-  <meta property="og:title" content="Pling — Terminal Notifications for iOS">
-  <meta property="og:description" content="Server notifications + SSH terminal in your pocket. Push alerts via webhook, connect via SSH/Mosh, manage everything from a customizable terminal UI.">
+  <meta property="og:site_name" content="Pling">
+  <meta property="og:title" content="Pling — Push notifications & SSH terminal for iPhone">
+  <meta property="og:description" content="Webhook alerts, SSH/Mosh terminal, port forwarding, and a host agent for server metrics — all from your iPhone.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://plingpush.com">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Pling — Terminal Notifications for iOS">
-  <meta name="twitter:description" content="Server notifications + SSH terminal in your pocket.">
-  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:url" content="https://plingpush.com/">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://plingpush.com">
+  <meta property="og:image:alt" content="Pling app icon — orange flame above a terminal prompt">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pling — Push notifications & SSH terminal for iPhone">
+  <meta name="twitter:description" content="Webhook alerts, SSH/Mosh terminal, port forwarding, and a host agent for server metrics.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://plingpush.com/">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:image" content="https://plingpush.com/og-image.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Pling",
-    "description": "Push notifications and SSH terminal for iOS. Send alerts from scripts, CI pipelines, and AI agents to your iPhone with a single HTTP request.",
-    "operatingSystem": "iOS",
+    "alternateName": "Pling: SSH & Push",
+    "description": "Push notifications and SSH terminal for iPhone. Send webhook alerts from scripts, CI pipelines, and AI agents; connect over SSH or Mosh; port-forward; and report server metrics with the Pling host agent.",
+    "operatingSystem": "iOS 17+",
     "applicationCategory": "DeveloperApplication",
     "applicationSubCategory": "Developer Tools",
     "offers": {
@@ -37,16 +45,25 @@
       "priceCurrency": "USD",
       "offerCount": "2"
     },
+    "image": "https://plingpush.com/og-image.png",
     "screenshot": "https://plingpush.com/og-image.png",
-    "url": "https://plingpush.com",
+    "url": "https://plingpush.com/",
     "downloadUrl": "https://apps.apple.com/app/pling-ssh-push/id6761271025",
-    "softwareVersion": "1.0.14",
-    "author": {
-      "@type": "Organization",
-      "name": "Jeramo",
-      "url": "https://github.com/Jeramo"
-    },
-    "featureList": "Push notifications, SSH terminal, Mosh support, port forwarding, terminal themes, notification channels, API webhooks, CLI tool, E2E encryption"
+    "installUrl": "https://apps.apple.com/app/pling-ssh-push/id6761271025",
+    "sameAs": [
+      "https://apps.apple.com/app/pling-ssh-push/id6761271025",
+      "https://github.com/Jeramo/pling-agent"
+    ],
+    "featureList": "Push notifications, SSH terminal, Mosh support, port forwarding, terminal themes, notification channels, API webhooks, host agent, scheduled commands, end-to-end encryption"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Pling",
+    "url": "https://plingpush.com/",
+    "publisher": { "@type": "Organization", "name": "Pling", "url": "https://plingpush.com/" }
   }
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
@@ -747,7 +764,7 @@ pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
 
 <footer>
   <div class="container">
-    <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+    <p>Pling <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>middot; <a href="privacy.html">Privacy</a> <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>middot; <a href="support.html">Support</a></p>
   </div>
 </footer>
 
