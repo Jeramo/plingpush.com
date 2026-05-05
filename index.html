@@ -739,14 +739,16 @@ pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
 
 <section class="cli-section" id="cli">
   <div class="container">
-    <h2><span style="color:var(--fg-dim)">//</span> <span>CLI tool</span></h2>
-    <p>Pipe output directly from your terminal to your phone.</p>
+    <h2><span style="color:var(--fg-dim)">//</span> <span>Pling CLI</span></h2>
+    <p>Manage the agent from your shell. Same binary runs the daemon and drives the service.</p>
     <div class="cli-example">
-      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">echo "Deploy done" | pling -t "deploy" -p high</span></div>
-      <div>&nbsp;</div>
-      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">tail -f /var/log/syslog | pling -t "syslog" --stream</span></div>
-      <div>&nbsp;</div>
-      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">make build 2>&1 | pling -t "Build result"</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling status</span>            <span style="color:var(--fg-dim)"># service state, version, config path</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling logs -f</span>          <span style="color:var(--fg-dim)"># tail recent agent logs</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling set-token &lt;TOKEN&gt;</span> <span style="color:var(--fg-dim)"># rotate token, restart service</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling restart</span>          <span style="color:var(--fg-dim)"># start | stop | restart</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling open</span>             <span style="color:var(--fg-dim)"># open the local web UI</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling config edit</span>      <span style="color:var(--fg-dim)"># edit config.toml in $EDITOR</span></div>
+      <div><span style="color:var(--fg-dim)">$</span> <span style="color:var(--fg)">pling uninstall</span>        <span style="color:var(--fg-dim)"># remove agent, config, service</span></div>
     </div>
   </div>
 </section>
