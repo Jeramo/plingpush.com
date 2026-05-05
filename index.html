@@ -424,6 +424,106 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
+    /* Agent install */
+    .agent {
+      padding: 60px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .agent h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: var(--fg-dim);
+    }
+
+    .agent h2 span:last-child { color: var(--fg); }
+
+    .agent-intro {
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto 36px;
+      font-size: 0.9rem;
+      color: var(--fg-dim);
+    }
+
+    .agent-intro code {
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: var(--mono);
+      color: var(--fg);
+    }
+
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 20px;
+      transition: border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agent-card:hover { border-color: var(--accent); }
+
+    .agent-card h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .agent-card pre {
+      background: #111114;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+    }
+
+    .agent-card pre code {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--fg);
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .agent-card p {
+      font-size: 0.78rem;
+      color: var(--fg-dim);
+      line-height: 1.5;
+      margin-top: auto;
+    }
+
+    .agent-card p code {
+      background: #111114;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.72rem;
+      font-family: var(--mono);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--fg);
+    }
+
+    .agent-foot {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--fg-dim);
+      margin-top: 32px;
+    }
+
     /* CLI */
     .cli-section {
       padding: 60px 0;
@@ -500,6 +600,7 @@
     </div>
     <a href="#features" onclick="document.getElementById('nav-overlay').classList.remove('open')">Features</a>
     <a href="#how" onclick="document.getElementById('nav-overlay').classList.remove('open')">How it works</a>
+    <a href="#agent" onclick="document.getElementById('nav-overlay').classList.remove('open')">Agent</a>
     <a href="#cli" onclick="document.getElementById('nav-overlay').classList.remove('open')">CLI</a>
     <a href="docs.html">Docs</a>
     <a href="support.html">Support</a>
@@ -596,6 +697,43 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="agent" id="agent">
+  <div class="container">
+    <h2><span style="color:var(--fg-dim)">//</span> <span>Install the agent</span></h2>
+    <p class="agent-intro">Run <code>pling</code> on a server or workstation to stream metrics, share terminal sessions, run scheduled commands, and expose a small local web UI to the iOS app. Pick the install method that fits your platform.</p>
+
+    <div class="agent-grid">
+      <div class="agent-card">
+        <h3>LINUX / MACOS</h3>
+        <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
+        <p>Downloads the latest release, prompts for your API token, and registers a systemd service (Linux) or LaunchAgent (macOS).</p>
+      </div>
+      <div class="agent-card">
+        <h3>HOMEBREW</h3>
+        <pre><code>brew install jeramo/pling/pling
+pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
+        <p>Tap install on macOS. <code>set-token</code> writes <code>config.toml</code> and starts the brew service.</p>
+      </div>
+      <div class="agent-card">
+        <h3>WINDOWS</h3>
+        <pre><code>irm https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.ps1 | iex</code></pre>
+        <p>PowerShell installer. Adds <code>pling</code> to the system PATH so it works in any shell.</p>
+      </div>
+      <div class="agent-card">
+        <h3>MANUAL</h3>
+        <pre><code>curl -L -o pling \
+  https://github.com/Jeramo/pling-agent/releases/\
+latest/download/pling-linux-amd64
+chmod +x pling &amp;&amp; sudo mv pling /usr/local/bin/
+pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
+        <p>Drop the binary in PATH and set your token. Or edit <code>/etc/pling/config.toml</code> directly.</p>
+      </div>
+    </div>
+
+    <p class="agent-foot">Linux (amd64/arm64) &middot; macOS (amd64/arm64) &middot; FreeBSD (amd64) &middot; Windows (amd64). macOS binaries are signed and notarized. <a href="https://github.com/Jeramo/pling-agent">Source on GitHub →</a></p>
   </div>
 </section>
 
