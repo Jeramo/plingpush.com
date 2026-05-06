@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Pling agent on Windows — PowerShell installer</title>
+  <meta name="description" content="Install the Pling host agent on Windows 10 and 11 with a PowerShell one-liner. Auto-PATH, runs as a Windows service, with manual install fallback.">
+  <meta name="keywords" content="install Pling Windows, PowerShell installer, Windows server agent, Windows monitoring, irm iex, Windows service push notifications">
+  <meta name="apple-itunes-app" content="app-id=6761271025">
+  <meta name="theme-color" content="#121214">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://plingpush.com/install-windows.html">
+  <meta property="og:site_name" content="Pling">
+  <meta property="og:title" content="Install Pling agent on Windows — PowerShell installer">
+  <meta property="og:description" content="One PowerShell command to install the Pling host agent. Auto-PATH, Windows service, manual install fallback.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://plingpush.com/install-windows.html">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Install Pling agent on Windows">
+  <meta name="twitter:description" content="One PowerShell command to install. Runs as a Windows service.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Install the Pling agent on Windows",
+    "description": "Install the Pling host agent on Windows 10 or 11 via the PowerShell one-liner installer.",
+    "totalTime": "PT2M",
+    "supply": [
+      { "@type": "HowToSupply", "name": "Windows 10 or 11 (amd64)" },
+      { "@type": "HowToSupply", "name": "PowerShell 5.1 or later" },
+      { "@type": "HowToSupply", "name": "Pling API token from the iOS app" }
+    ],
+    "tool": [{ "@type": "HowToTool", "name": "PowerShell (Administrator)" }],
+    "step": [
+      { "@type": "HowToStep", "name": "Open PowerShell as Administrator", "text": "Right-click PowerShell and choose Run as administrator." },
+      { "@type": "HowToStep", "name": "Run the installer", "text": "Run `irm https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.ps1 | iex` to download and install the agent." },
+      { "@type": "HowToStep", "name": "Set your API token", "text": "Run `pling set-token <YOUR_TOKEN>`. The installer adds Pling to the system PATH so it works in any shell." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which Windows versions are supported?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Windows 10 and Windows 11, amd64. Windows Server 2019 and 2022 also work. ARM64 Windows is not yet shipped — use the manual install with a 64-bit emulation layer if needed." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to change my PowerShell execution policy?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The `irm | iex` install one-liner runs in-process and does not need a script execution policy change. If you save the script to disk first, you may need `Set-ExecutionPolicy -Scope Process Bypass` to run it." }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is the Windows config file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Default config path on Windows is C:\\ProgramData\\Pling\\config.toml. Run `pling config` to print the active path." }
+      },
+      {
+        "@type": "Question",
+        "name": "How are Windows logs stored?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Run `pling logs -f` to tail. The Windows service writes to the Windows Event Log and to a rotating log file at C:\\ProgramData\\Pling\\logs\\agent.log." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://plingpush.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Install on Windows", "item": "https://plingpush.com/install-windows.html" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #121214; --fg: #E8E8EC; --fg-dim: #7A7C87;
+      --accent: #FF6C37; --surface: #1a1a1e; --code-bg: #111114;
+      --border: rgba(255, 255, 255, 0.08);
+      --font: 'Geist', system-ui, sans-serif; --mono: 'GeistMono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #fff; }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(18,18,20,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 14px 0; }
+    nav .container { max-width: 900px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo .icon { width: 28px; height: 28px; border-radius: 6px; }
+    .logo .wordmark { height: 20px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-right > a { font-size: 0.85rem; color: var(--fg-dim); transition: color 0.15s; }
+    .nav-right > a:hover { color: var(--fg); }
+    .hamburger { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .hamburger line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; transition: stroke 0.15s; }
+    .hamburger:hover line { stroke: var(--fg); }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+    .nav-overlay.open { opacity: 1; visibility: visible; }
+    .nav-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 260px; background: #1a1a1e; border-left: 1px solid var(--border); z-index: 201; transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column; padding: 20px 0; }
+    .nav-overlay.open .nav-panel { transform: translateX(0); }
+    .nav-panel-header { display: flex; justify-content: flex-end; padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .nav-close { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .nav-close svg { width: 20px; height: 20px; }
+    .nav-close line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; }
+    .nav-panel a { display: block; padding: 12px 24px; font-size: 0.9rem; color: var(--fg-dim); transition: color 0.15s, background 0.15s; }
+    .nav-panel a:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
+
+    .content { padding: 110px 0 60px; }
+    .crumbs { font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 16px; }
+    .crumbs a { color: var(--fg-dim); }
+    .crumbs a:hover { color: var(--fg); }
+    h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: 8px; line-height: 1.25; }
+    .intro { font-size: 0.95rem; color: var(--fg-dim); margin-bottom: 32px; line-height: 1.7; }
+    h2 { font-size: 1.05rem; font-weight: 700; margin-top: 40px; margin-bottom: 14px; scroll-margin-top: 80px; }
+    h3 { font-size: 0.9rem; font-weight: 600; margin-top: 22px; margin-bottom: 8px; color: var(--accent); letter-spacing: 0.02em; }
+    p { font-size: 0.88rem; color: rgba(232,232,236,0.85); line-height: 1.7; margin-bottom: 12px; }
+    ul { list-style: none; margin-bottom: 12px; }
+    ul li { font-size: 0.85rem; color: rgba(232,232,236,0.85); line-height: 1.7; padding-left: 18px; position: relative; margin-bottom: 6px; }
+    ul li::before { content: "~"; position: absolute; left: 0; color: var(--fg-dim); font-weight: 700; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 12px 0 16px; }
+    pre code { font-family: var(--mono); font-size: 0.78rem; color: var(--fg); line-height: 1.55; white-space: pre; }
+    p code, li code { font-family: var(--mono); font-size: 0.78rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--fg); }
+    .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 12px 16px; margin: 16px 0; font-size: 0.85rem; color: rgba(232,232,236,0.85); }
+    .callout strong { color: var(--fg); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; }
+    details summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--fg); }
+    details[open] summary { margin-bottom: 8px; }
+    details p { margin-bottom: 0; }
+    .other-platforms { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--fg-dim); }
+    .other-platforms a { color: var(--accent); }
+
+    footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 0.75rem; color: #333; margin-top: 40px; }
+    footer .container { max-width: 900px; }
+    footer a { color: var(--fg-dim); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling - Push notifications for developers"></a>
+    <div class="nav-right">
+      <a href="docs.html">Docs</a>
+      <a href="https://apps.apple.com/app/pling-ssh-push/id6761271025" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
+      <button class="hamburger" onclick="document.getElementById('nav-overlay').classList.add('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" id="nav-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nav-panel">
+    <div class="nav-panel-header">
+      <button class="nav-close" onclick="document.getElementById('nav-overlay').classList.remove('open')" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/#agent">Install agent</a>
+    <a href="docs.html">Docs</a>
+    <a href="support.html">Support</a>
+    <a href="https://github.com/Jeramo/pling-agent">GitHub</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+    <p class="crumbs"><a href="/">Home</a> / Install on Windows</p>
+    <h1>Install the Pling agent on Windows</h1>
+    <p class="intro">The Pling host agent runs on Windows 10, Windows 11, and Windows Server. It streams CPU, memory, disk, and network metrics to the iOS app, runs scheduled commands, and exposes a small local web UI. Install once with PowerShell and it autostarts as a Windows service.</p>
+
+    <h2>PowerShell installer (recommended)</h2>
+    <p>Open PowerShell <strong>as Administrator</strong>, then run:</p>
+    <pre><code>irm https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.ps1 | iex</code></pre>
+    <p>The installer downloads the latest binary, registers a Windows service, and adds the install dir to the system PATH so <code>pling</code> works in any shell. When prompted, paste your API token.</p>
+    <pre><code>pling set-token &lt;YOUR_TOKEN&gt;
+pling status</code></pre>
+
+    <div class="callout"><strong>Where to find your token:</strong> open the iOS app, go to Settings → Hosts → Add agent. Copy the token and paste it when the installer asks (or run <code>pling set-token</code> afterwards).</div>
+
+    <h2>Manual install</h2>
+    <p>Download the binary, drop it somewhere on PATH, and write a config file.</p>
+    <pre><code>Invoke-WebRequest `
+  -Uri https://github.com/Jeramo/pling-agent/releases/latest/download/pling-windows-amd64.exe `
+  -OutFile pling.exe
+Move-Item pling.exe C:\Windows\System32\pling.exe
+New-Item -ItemType Directory -Force C:\ProgramData\Pling | Out-Null
+@'
+api_url = "https://agent.plingpush.com"
+token = "YOUR_TOKEN_HERE"
+metrics_interval = 60
+'@ | Set-Content C:\ProgramData\Pling\config.toml -Encoding utf8</code></pre>
+
+    <p>Run interactively to confirm:</p>
+    <pre><code>pling serve</code></pre>
+
+    <h2>Configure</h2>
+    <p>Edit the config in your default editor:</p>
+    <pre><code>pling config edit</code></pre>
+    <p>Or update just the token:</p>
+    <pre><code>pling set-token &lt;NEW_TOKEN&gt;</code></pre>
+
+    <h2>Update</h2>
+    <p>Re-run the PowerShell installer. It replaces the binary, keeps your config, and restarts the service:</p>
+    <pre><code>irm https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.ps1 | iex</code></pre>
+
+    <h2>Uninstall</h2>
+    <pre><code>pling uninstall</code></pre>
+    <p>Removes the binary, config, PATH entry, and Windows service.</p>
+
+    <h2>Frequently asked</h2>
+
+    <details>
+      <summary>Which Windows versions are supported?</summary>
+      <p>Windows 10 and Windows 11, amd64. Windows Server 2019 and 2022 also work. ARM64 Windows is not yet shipped natively — use the manual install with the 64-bit emulation layer if needed.</p>
+    </details>
+
+    <details>
+      <summary>Do I need to change my PowerShell execution policy?</summary>
+      <p>No. The <code>irm | iex</code> one-liner pipes the script into PowerShell in-process, so the execution policy does not block it. If you save the install script to disk first, you may need <code>Set-ExecutionPolicy -Scope Process Bypass</code> to run it.</p>
+    </details>
+
+    <details>
+      <summary>Where is the Windows config file?</summary>
+      <p>Default config path is <code>C:\ProgramData\Pling\config.toml</code>. Run <code>pling config</code> to print the active path on this machine.</p>
+    </details>
+
+    <details>
+      <summary>How are Windows logs stored?</summary>
+      <p>Run <code>pling logs -f</code> to tail. The Windows service also writes to the Windows Event Log and to a rotating file at <code>C:\ProgramData\Pling\logs\agent.log</code>.</p>
+    </details>
+
+    <details>
+      <summary>Does pling work in cmd.exe and Git Bash?</summary>
+      <p>Yes. The PowerShell installer adds the install directory to the system PATH, so <code>pling</code> is callable from cmd.exe, Git Bash, Windows Terminal, and any other shell.</p>
+    </details>
+
+    <p class="other-platforms">Installing on a different platform? <a href="install-macos.html">macOS</a> &middot; <a href="install-linux.html">Linux</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>Pling &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

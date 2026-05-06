@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Pling agent on macOS — Homebrew, curl, manual</title>
+  <meta name="description" content="Install the Pling host agent on macOS via Homebrew, the curl installer, or a manual binary. Set your API token and start the LaunchAgent in under a minute.">
+  <meta name="keywords" content="install Pling macOS, Homebrew tap pling, macOS server agent, LaunchAgent, Apple silicon, server monitoring macOS">
+  <meta name="apple-itunes-app" content="app-id=6761271025">
+  <meta name="theme-color" content="#121214">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://plingpush.com/install-macos.html">
+  <meta property="og:site_name" content="Pling">
+  <meta property="og:title" content="Install Pling agent on macOS — Homebrew, curl, manual">
+  <meta property="og:description" content="Three ways to install the Pling host agent on macOS: Homebrew tap, curl one-liner, or manual binary. Apple silicon and Intel both supported.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://plingpush.com/install-macos.html">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Install Pling agent on macOS">
+  <meta name="twitter:description" content="Homebrew tap, curl one-liner, or manual binary. Apple silicon and Intel both supported.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Install the Pling agent on macOS",
+    "description": "Install the Pling host agent on macOS via Homebrew, the curl installer, or a manual binary download.",
+    "totalTime": "PT2M",
+    "supply": [
+      { "@type": "HowToSupply", "name": "macOS 12 or later (Apple silicon or Intel)" },
+      { "@type": "HowToSupply", "name": "Pling API token from the iOS app" }
+    ],
+    "tool": [{ "@type": "HowToTool", "name": "Terminal" }],
+    "step": [
+      { "@type": "HowToStep", "name": "Install via Homebrew", "text": "Run `brew install jeramo/pling/pling` to install the binary and tap." },
+      { "@type": "HowToStep", "name": "Set your API token", "text": "Run `pling set-token <YOUR_TOKEN>` to write the config and start the brew service." },
+      { "@type": "HowToStep", "name": "Verify", "text": "Run `pling status` to confirm the service is running and connected." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does the Pling agent work on Apple silicon?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Native arm64 binaries are shipped alongside Intel x86_64 builds. The installer and Homebrew tap pick the right architecture automatically." }
+      },
+      {
+        "@type": "Question",
+        "name": "Are macOS binaries notarized?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. All macOS binaries are signed with Developer ID and notarized by Apple, so Gatekeeper does not block them." }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is the macOS config file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "When installed via Homebrew it is at $(brew --prefix)/etc/pling/config.toml. The curl installer writes /etc/pling/config.toml. Run `pling config` to print the active path." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I update the Pling agent on macOS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Homebrew installs: `brew upgrade pling && brew services restart pling`. curl installs: re-run the install script — it replaces the binary and restarts the LaunchAgent." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://plingpush.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Install on macOS", "item": "https://plingpush.com/install-macos.html" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #121214; --fg: #E8E8EC; --fg-dim: #7A7C87;
+      --accent: #FF6C37; --surface: #1a1a1e; --code-bg: #111114;
+      --border: rgba(255, 255, 255, 0.08);
+      --font: 'Geist', system-ui, sans-serif; --mono: 'GeistMono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #fff; }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(18,18,20,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 14px 0; }
+    nav .container { max-width: 900px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo .icon { width: 28px; height: 28px; border-radius: 6px; }
+    .logo .wordmark { height: 20px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-right > a { font-size: 0.85rem; color: var(--fg-dim); transition: color 0.15s; }
+    .nav-right > a:hover { color: var(--fg); }
+    .hamburger { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .hamburger line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; transition: stroke 0.15s; }
+    .hamburger:hover line { stroke: var(--fg); }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+    .nav-overlay.open { opacity: 1; visibility: visible; }
+    .nav-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 260px; background: #1a1a1e; border-left: 1px solid var(--border); z-index: 201; transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column; padding: 20px 0; }
+    .nav-overlay.open .nav-panel { transform: translateX(0); }
+    .nav-panel-header { display: flex; justify-content: flex-end; padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .nav-close { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .nav-close svg { width: 20px; height: 20px; }
+    .nav-close line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; }
+    .nav-panel a { display: block; padding: 12px 24px; font-size: 0.9rem; color: var(--fg-dim); transition: color 0.15s, background 0.15s; }
+    .nav-panel a:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
+
+    .content { padding: 110px 0 60px; }
+    .crumbs { font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 16px; }
+    .crumbs a { color: var(--fg-dim); }
+    .crumbs a:hover { color: var(--fg); }
+    h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: 8px; line-height: 1.25; }
+    .intro { font-size: 0.95rem; color: var(--fg-dim); margin-bottom: 32px; line-height: 1.7; }
+    h2 { font-size: 1.05rem; font-weight: 700; margin-top: 40px; margin-bottom: 14px; scroll-margin-top: 80px; }
+    h3 { font-size: 0.9rem; font-weight: 600; margin-top: 22px; margin-bottom: 8px; color: var(--accent); letter-spacing: 0.02em; }
+    p { font-size: 0.88rem; color: rgba(232,232,236,0.85); line-height: 1.7; margin-bottom: 12px; }
+    ul { list-style: none; margin-bottom: 12px; }
+    ul li { font-size: 0.85rem; color: rgba(232,232,236,0.85); line-height: 1.7; padding-left: 18px; position: relative; margin-bottom: 6px; }
+    ul li::before { content: "~"; position: absolute; left: 0; color: var(--fg-dim); font-weight: 700; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 12px 0 16px; }
+    pre code { font-family: var(--mono); font-size: 0.78rem; color: var(--fg); line-height: 1.55; white-space: pre; }
+    p code, li code { font-family: var(--mono); font-size: 0.78rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--fg); }
+    .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 12px 16px; margin: 16px 0; font-size: 0.85rem; color: rgba(232,232,236,0.85); }
+    .callout strong { color: var(--fg); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; }
+    details summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--fg); }
+    details[open] summary { margin-bottom: 8px; }
+    details p { margin-bottom: 0; }
+    .other-platforms { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--fg-dim); }
+    .other-platforms a { color: var(--accent); }
+
+    footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 0.75rem; color: #333; margin-top: 40px; }
+    footer .container { max-width: 900px; }
+    footer a { color: var(--fg-dim); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling - Push notifications for developers"></a>
+    <div class="nav-right">
+      <a href="docs.html">Docs</a>
+      <a href="https://apps.apple.com/app/pling-ssh-push/id6761271025" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
+      <button class="hamburger" onclick="document.getElementById('nav-overlay').classList.add('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" id="nav-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nav-panel">
+    <div class="nav-panel-header">
+      <button class="nav-close" onclick="document.getElementById('nav-overlay').classList.remove('open')" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/#agent">Install agent</a>
+    <a href="docs.html">Docs</a>
+    <a href="support.html">Support</a>
+    <a href="https://github.com/Jeramo/pling-agent">GitHub</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+    <p class="crumbs"><a href="/">Home</a> / Install on macOS</p>
+    <h1>Install the Pling agent on macOS</h1>
+    <p class="intro">The Pling host agent runs on your Mac, streams CPU, memory, disk, and network metrics to the iOS app, relays shared SSH/Mosh sessions, runs scheduled commands, and exposes a small local web UI. macOS 12 and later, native on Apple silicon and Intel.</p>
+
+    <h2>Homebrew (recommended)</h2>
+    <p>Install the tap and the agent in one step, then set your API token. <code>set-token</code> writes the config and starts the brew service.</p>
+    <pre><code>brew install jeramo/pling/pling
+pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
+    <p>Verify it's running:</p>
+    <pre><code>pling status
+brew services list | grep pling</code></pre>
+
+    <div class="callout"><strong>Where to find your token:</strong> open the iOS app, go to Settings → Hosts → Add agent. Copy the token and paste it into <code>set-token</code>.</div>
+
+    <h2>Curl one-liner</h2>
+    <p>Skip Homebrew entirely. The installer downloads the latest signed and notarized binary, prompts for your token, and registers a per-user LaunchAgent.</p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
+    <p>The LaunchAgent autostarts on login. Logs go to <code>~/Library/Logs/pling-agent.log</code>.</p>
+
+    <h2>Manual install</h2>
+    <p>Pick this when you want full control or to install on a Mac without admin privileges. Replace <code>arm64</code> with <code>amd64</code> on Intel Macs.</p>
+    <pre><code>curl -L -o pling \
+  https://github.com/Jeramo/pling-agent/releases/latest/download/pling-darwin-arm64
+chmod +x pling
+sudo mv pling /usr/local/bin/
+pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
+
+    <h2>Configure</h2>
+    <p>Print the active config path:</p>
+    <pre><code>pling config</code></pre>
+    <p>Edit it in <code>$EDITOR</code>:</p>
+    <pre><code>pling config edit</code></pre>
+    <p>Typical fields: <code>api_url</code>, <code>token</code>, <code>metrics_interval</code>.</p>
+
+    <h2>Update</h2>
+    <p>Homebrew:</p>
+    <pre><code>brew upgrade pling
+brew services restart pling</code></pre>
+    <p>Curl install: re-run the install script. It replaces the binary and restarts the LaunchAgent.</p>
+
+    <h2>Uninstall</h2>
+    <pre><code>pling uninstall</code></pre>
+    <p>Removes the binary, config, and service registration. Homebrew installs can also be removed with <code>brew uninstall pling</code>.</p>
+
+    <h2>Frequently asked</h2>
+
+    <details>
+      <summary>Does the Pling agent work on Apple silicon?</summary>
+      <p>Yes. Native arm64 binaries are shipped alongside Intel x86_64 builds. The installer and the Homebrew tap pick the right architecture automatically.</p>
+    </details>
+
+    <details>
+      <summary>Are macOS binaries notarized?</summary>
+      <p>Yes. Every release is signed with Developer ID and notarized by Apple, so Gatekeeper does not block the binary.</p>
+    </details>
+
+    <details>
+      <summary>Where is the macOS config file?</summary>
+      <p>When installed via Homebrew the config lives at <code>$(brew --prefix)/etc/pling/config.toml</code>. The curl installer writes <code>/etc/pling/config.toml</code>. Run <code>pling config</code> to print the active path on this machine.</p>
+    </details>
+
+    <details>
+      <summary>How do I view agent logs?</summary>
+      <p>Run <code>pling logs -f</code> to tail logs. Homebrew installs route through <code>brew services</code>; LaunchAgent installs write to <code>~/Library/Logs/pling-agent.log</code>.</p>
+    </details>
+
+    <details>
+      <summary>How do I update the Pling agent?</summary>
+      <p>Homebrew: <code>brew upgrade pling && brew services restart pling</code>. Curl install: re-run the install script; it replaces the binary and restarts the LaunchAgent.</p>
+    </details>
+
+    <p class="other-platforms">Installing on a different platform? <a href="install-linux.html">Linux</a> &middot; <a href="install-windows.html">Windows</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>Pling &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

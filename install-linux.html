@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Pling agent on Linux — curl one-liner, systemd, manual</title>
+  <meta name="description" content="Install the Pling host agent on Linux with the curl one-liner, a systemd unit, or a manual binary. Works on Ubuntu, Debian, Fedora, Arch, Alpine, and Raspberry Pi.">
+  <meta name="keywords" content="install Pling Linux, server agent Linux, systemd service, Ubuntu monitoring agent, Raspberry Pi monitoring, Linux SSH agent, push notifications from server">
+  <meta name="apple-itunes-app" content="app-id=6761271025">
+  <meta name="theme-color" content="#121214">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://plingpush.com/install-linux.html">
+  <meta property="og:site_name" content="Pling">
+  <meta property="og:title" content="Install Pling agent on Linux — curl one-liner, systemd, manual">
+  <meta property="og:description" content="Curl installer with auto systemd, a manual binary install, or a hand-rolled service. amd64 and arm64.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://plingpush.com/install-linux.html">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Install Pling agent on Linux">
+  <meta name="twitter:description" content="curl one-liner, systemd, or manual install. amd64 and arm64.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Install the Pling agent on Linux",
+    "description": "Install the Pling host agent on Linux via the curl one-liner installer, a systemd unit, or a manual binary download.",
+    "totalTime": "PT2M",
+    "supply": [
+      { "@type": "HowToSupply", "name": "Linux amd64 or arm64 (Ubuntu, Debian, Fedora, Arch, Alpine, Raspberry Pi OS)" },
+      { "@type": "HowToSupply", "name": "Pling API token from the iOS app" }
+    ],
+    "tool": [{ "@type": "HowToTool", "name": "Bash shell" }],
+    "step": [
+      { "@type": "HowToStep", "name": "Run the installer", "text": "Pipe the install script to sh: `curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh`" },
+      { "@type": "HowToStep", "name": "Paste your API token", "text": "The installer prompts for your token, writes /etc/pling/config.toml, and registers a systemd service." },
+      { "@type": "HowToStep", "name": "Verify", "text": "Run `systemctl status pling` and `pling status` to confirm the service is running." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does the Pling agent run on Raspberry Pi or arm64 servers?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Native arm64 binaries are published for every release. The installer detects the architecture automatically; for manual installs grab pling-linux-arm64 from the releases page." }
+      },
+      {
+        "@type": "Question",
+        "name": "Which Linux distros are supported?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Any Linux with glibc 2.17+ and systemd or another init that can run a binary. Tested on Ubuntu, Debian, Fedora, Arch, Alpine (musl build), and Raspberry Pi OS." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I run the Pling agent without systemd?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Install the binary manually and run `pling serve` under any process supervisor (runit, OpenRC, supervisord, Docker, tmux). The CLI subcommands like start, stop, and status are systemd shortcuts; everything else works without it." }
+      },
+      {
+        "@type": "Question",
+        "name": "Where are the agent logs on Linux?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Systemd installs go to journalctl: `journalctl -u pling -f` or use `pling logs -f`. Manual runs of `pling serve` write to stdout." }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://plingpush.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Install on Linux", "item": "https://plingpush.com/install-linux.html" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #121214; --fg: #E8E8EC; --fg-dim: #7A7C87;
+      --accent: #FF6C37; --surface: #1a1a1e; --code-bg: #111114;
+      --border: rgba(255, 255, 255, 0.08);
+      --font: 'Geist', system-ui, sans-serif; --mono: 'GeistMono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #fff; }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(18,18,20,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 14px 0; }
+    nav .container { max-width: 900px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo .icon { width: 28px; height: 28px; border-radius: 6px; }
+    .logo .wordmark { height: 20px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-right > a { font-size: 0.85rem; color: var(--fg-dim); transition: color 0.15s; }
+    .nav-right > a:hover { color: var(--fg); }
+    .hamburger { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .hamburger line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; transition: stroke 0.15s; }
+    .hamburger:hover line { stroke: var(--fg); }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+    .nav-overlay.open { opacity: 1; visibility: visible; }
+    .nav-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 260px; background: #1a1a1e; border-left: 1px solid var(--border); z-index: 201; transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column; padding: 20px 0; }
+    .nav-overlay.open .nav-panel { transform: translateX(0); }
+    .nav-panel-header { display: flex; justify-content: flex-end; padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .nav-close { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .nav-close svg { width: 20px; height: 20px; }
+    .nav-close line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; }
+    .nav-panel a { display: block; padding: 12px 24px; font-size: 0.9rem; color: var(--fg-dim); transition: color 0.15s, background 0.15s; }
+    .nav-panel a:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
+
+    .content { padding: 110px 0 60px; }
+    .crumbs { font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 16px; }
+    .crumbs a { color: var(--fg-dim); }
+    .crumbs a:hover { color: var(--fg); }
+    h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: 8px; line-height: 1.25; }
+    .intro { font-size: 0.95rem; color: var(--fg-dim); margin-bottom: 32px; line-height: 1.7; }
+    h2 { font-size: 1.05rem; font-weight: 700; margin-top: 40px; margin-bottom: 14px; scroll-margin-top: 80px; }
+    h3 { font-size: 0.9rem; font-weight: 600; margin-top: 22px; margin-bottom: 8px; color: var(--accent); letter-spacing: 0.02em; }
+    p { font-size: 0.88rem; color: rgba(232,232,236,0.85); line-height: 1.7; margin-bottom: 12px; }
+    ul { list-style: none; margin-bottom: 12px; }
+    ul li { font-size: 0.85rem; color: rgba(232,232,236,0.85); line-height: 1.7; padding-left: 18px; position: relative; margin-bottom: 6px; }
+    ul li::before { content: "~"; position: absolute; left: 0; color: var(--fg-dim); font-weight: 700; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; margin: 12px 0 16px; }
+    pre code { font-family: var(--mono); font-size: 0.78rem; color: var(--fg); line-height: 1.55; white-space: pre; }
+    p code, li code { font-family: var(--mono); font-size: 0.78rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--fg); }
+    .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 12px 16px; margin: 16px 0; font-size: 0.85rem; color: rgba(232,232,236,0.85); }
+    .callout strong { color: var(--fg); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; }
+    details summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--fg); }
+    details[open] summary { margin-bottom: 8px; }
+    details p { margin-bottom: 0; }
+    .other-platforms { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--fg-dim); }
+    .other-platforms a { color: var(--accent); }
+
+    footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 0.75rem; color: #333; margin-top: 40px; }
+    footer .container { max-width: 900px; }
+    footer a { color: var(--fg-dim); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling - Push notifications for developers"></a>
+    <div class="nav-right">
+      <a href="docs.html">Docs</a>
+      <a href="https://apps.apple.com/app/pling-ssh-push/id6761271025" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
+      <button class="hamburger" onclick="document.getElementById('nav-overlay').classList.add('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" id="nav-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nav-panel">
+    <div class="nav-panel-header">
+      <button class="nav-close" onclick="document.getElementById('nav-overlay').classList.remove('open')" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/#agent">Install agent</a>
+    <a href="docs.html">Docs</a>
+    <a href="support.html">Support</a>
+    <a href="https://github.com/Jeramo/pling-agent">GitHub</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+    <p class="crumbs"><a href="/">Home</a> / Install on Linux</p>
+    <h1>Install the Pling agent on Linux</h1>
+    <p class="intro">The Pling host agent runs on any Linux server or workstation, streams CPU, memory, disk, and network metrics to the iOS app, relays shared SSH/Mosh sessions, runs scheduled commands, and exposes a small local web UI. Native amd64 and arm64 binaries; works on Ubuntu, Debian, Fedora, Arch, Alpine, and Raspberry Pi OS.</p>
+
+    <h2>Curl one-liner (recommended)</h2>
+    <p>The installer downloads the right binary for your architecture, prompts for your API token, and registers a systemd service that autostarts on boot.</p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
+    <p>Verify it's running:</p>
+    <pre><code>pling status
+systemctl status pling
+journalctl -u pling -n 50 --no-pager</code></pre>
+
+    <div class="callout"><strong>Where to find your token:</strong> open the iOS app, go to Settings → Hosts → Add agent. Copy the token and paste it when the installer asks.</div>
+
+    <h2>Manual install</h2>
+    <p>Pick this when you want full control or to deploy via configuration management. Replace <code>amd64</code> with <code>arm64</code> on Raspberry Pi or arm64 servers.</p>
+    <pre><code>curl -L -o pling \
+  https://github.com/Jeramo/pling-agent/releases/latest/download/pling-linux-amd64
+chmod +x pling
+sudo mv pling /usr/local/bin/
+sudo mkdir -p /etc/pling
+sudo tee /etc/pling/config.toml &gt;/dev/null &lt;&lt;'EOF'
+api_url = "https://agent.plingpush.com"
+token = "YOUR_TOKEN_HERE"
+metrics_interval = 60
+EOF</code></pre>
+
+    <p>Run it directly to confirm:</p>
+    <pre><code>pling serve</code></pre>
+
+    <h2>Systemd unit</h2>
+    <p>Drop this in <code>/etc/systemd/system/pling.service</code>, then <code>systemctl enable --now pling</code>:</p>
+    <pre><code>[Unit]
+Description=Pling host agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/pling serve
+Restart=on-failure
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+    <h2>Configure</h2>
+    <p>Edit the config in <code>$EDITOR</code>:</p>
+    <pre><code>sudo pling config edit</code></pre>
+    <p>Or update just the token and bounce the service:</p>
+    <pre><code>sudo pling set-token &lt;NEW_TOKEN&gt;</code></pre>
+
+    <h2>Update</h2>
+    <p>Re-run the install script. It replaces the binary, keeps your config, and restarts the systemd unit:</p>
+    <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
+
+    <h2>Uninstall</h2>
+    <pre><code>sudo pling uninstall</code></pre>
+    <p>Removes the binary, config, and systemd unit.</p>
+
+    <h2>Frequently asked</h2>
+
+    <details>
+      <summary>Does the Pling agent run on Raspberry Pi or arm64 servers?</summary>
+      <p>Yes. Native arm64 binaries are published for every release. The installer detects the architecture automatically; for manual installs grab <code>pling-linux-arm64</code> from the releases page.</p>
+    </details>
+
+    <details>
+      <summary>Which Linux distros are supported?</summary>
+      <p>Any Linux with glibc 2.17 or later and an init system. Tested on Ubuntu, Debian, Fedora, Arch, Alpine (musl), and Raspberry Pi OS.</p>
+    </details>
+
+    <details>
+      <summary>Can I run the Pling agent without systemd?</summary>
+      <p>Yes. Install the binary manually and run <code>pling serve</code> under any supervisor (runit, OpenRC, supervisord, Docker, tmux). The lifecycle subcommands (<code>start</code>, <code>stop</code>, <code>restart</code>) are systemd shortcuts; everything else works without it.</p>
+    </details>
+
+    <details>
+      <summary>Where are the agent logs?</summary>
+      <p>Systemd installs go to journalctl: <code>journalctl -u pling -f</code>, or use <code>pling logs -f</code>. Manual runs of <code>pling serve</code> write to stdout.</p>
+    </details>
+
+    <details>
+      <summary>Can I run the agent inside Docker?</summary>
+      <p>Yes. Mount the Docker socket if you want container inventory and start/stop actions, otherwise the agent runs fine in any minimal Alpine or Debian-slim base image.</p>
+    </details>
+
+    <p class="other-platforms">Installing on a different platform? <a href="install-macos.html">macOS</a> &middot; <a href="install-windows.html">Windows</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>Pling &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

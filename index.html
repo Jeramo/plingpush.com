@@ -716,20 +716,20 @@
 
     <div class="agent-grid">
       <div class="agent-card">
-        <h3>LINUX / MACOS</h3>
-        <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
-        <p>Downloads the latest release, prompts for your API token, and registers a systemd service (Linux) or LaunchAgent (macOS).</p>
-      </div>
-      <div class="agent-card">
-        <h3>HOMEBREW</h3>
+        <h3>MACOS</h3>
         <pre><code>brew install jeramo/pling/pling
 pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
-        <p>Tap install on macOS. <code>set-token</code> writes <code>config.toml</code> and starts the brew service.</p>
+        <p>Homebrew tap, signed and notarized binaries. <a href="install-macos.html">Full macOS install guide →</a></p>
+      </div>
+      <div class="agent-card">
+        <h3>LINUX</h3>
+        <pre><code>curl -sSL https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.sh | sh</code></pre>
+        <p>One-liner installs the binary and registers a systemd service. <a href="install-linux.html">Full Linux install guide →</a></p>
       </div>
       <div class="agent-card">
         <h3>WINDOWS</h3>
         <pre><code>irm https://raw.githubusercontent.com/Jeramo/pling-agent/main/install.ps1 | iex</code></pre>
-        <p>PowerShell installer. Adds <code>pling</code> to the system PATH so it works in any shell.</p>
+        <p>PowerShell installer adds <code>pling</code> to PATH. <a href="install-windows.html">Full Windows install guide →</a></p>
       </div>
       <div class="agent-card">
         <h3>MANUAL</h3>
@@ -764,7 +764,7 @@ pling set-token &lt;YOUR_TOKEN&gt;</code></pre>
 
 <footer>
   <div class="container">
-    <p>Pling <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>middot; <a href="privacy.html">Privacy</a> <p>Pling &mdash; built by <a href="https://github.com/Jeramo">Jeramo</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>middot; <a href="support.html">Support</a></p>
+    <p>Pling &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
   </div>
 </footer>
 
