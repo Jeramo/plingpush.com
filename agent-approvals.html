@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent approvals — Approve Claude Code from your phone</title>
+  <meta name="description" content="Let Claude Code ask your phone before it runs a command. Approve or deny from the lock screen, and the agent keeps working — no install on the host, just a hook in settings.json.">
+  <meta name="keywords" content="Claude Code hooks, agent approvals, PreToolUse hook, remote agent supervision, approve AI agent from phone, Claude Code notifications">
+  <meta name="apple-itunes-app" content="app-id=6761271025">
+  <meta name="theme-color" content="#121214">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://plingpush.com/agent-approvals.html">
+  <meta property="og:site_name" content="Pling">
+  <meta property="og:title" content="Agent approvals — Approve Claude Code from your phone">
+  <meta property="og:description" content="Your coding agent asks before it acts. You get a push, tap Approve or Deny, and it continues — even when you're nowhere near the terminal.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://plingpush.com/agent-approvals.html">
+  <meta property="og:image" content="https://plingpush.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pling app icon — orange flame above a terminal prompt">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent approvals — Approve Claude Code from your phone">
+  <meta name="twitter:description" content="Claude Code asks your phone before running a command. Approve from the lock screen.">
+  <meta name="twitter:image" content="https://plingpush.com/og-image.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Agent approvals for Claude Code",
+    "description": "Configure a Claude Code PreToolUse hook so your coding agent asks your phone for approval before running a tool, and continues once you answer.",
+    "url": "https://plingpush.com/agent-approvals.html",
+    "image": "https://plingpush.com/og-image.png",
+    "author": { "@type": "Organization", "name": "Pling", "url": "https://plingpush.com/" },
+    "publisher": { "@type": "Organization", "name": "Pling", "url": "https://plingpush.com/" },
+    "mainEntityOfPage": "https://plingpush.com/agent-approvals.html"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://plingpush.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Agent approvals", "item": "https://plingpush.com/agent-approvals.html" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1/dist/fonts/geist-mono/style.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #121214; --bg2: #0e0e10; --fg: #E8E8EC; --fg-dim: #7A7C87;
+      --accent: #FF6C37; --surface: #1a1a1e; --border: rgba(255,255,255,0.08);
+      --green: #4ade80; --green-bg: #0d2818; --blue: #60a5fa; --blue-bg: #0d1b2a;
+      --red: #ef4444; --yellow: #fbbf24;
+      --font: 'Geist', system-ui, sans-serif; --mono: 'GeistMono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--fg); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #fff; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(18,18,20,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 14px 0; }
+    nav .c { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo .icon { width: 28px; height: 28px; border-radius: 6px; }
+    .logo .wordmark { height: 20px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-right > a { font-size: 0.85rem; color: var(--fg-dim); transition: color 0.15s; text-decoration: none; }
+    .nav-right > a:hover { color: var(--fg); }
+    .nav-right > a.active { color: var(--fg); }
+    .hamburger { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .hamburger line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; transition: stroke 0.15s; }
+    .hamburger:hover line { stroke: var(--fg); }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+    .nav-overlay.open { opacity: 1; visibility: visible; }
+    .nav-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 260px; background: #1a1a1e; border-left: 1px solid var(--border); z-index: 201; transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column; padding: 20px 0; }
+    .nav-overlay.open .nav-panel { transform: translateX(0); }
+    .nav-panel-header { display: flex; justify-content: flex-end; padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .nav-close { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .nav-close svg { width: 20px; height: 20px; }
+    .nav-close line { stroke: var(--fg-dim); stroke-width: 2; stroke-linecap: round; }
+    .nav-close:hover line { stroke: var(--fg); }
+    .nav-panel a { display: block; padding: 12px 24px; font-size: 0.9rem; color: var(--fg-dim); text-decoration: none; transition: color 0.15s, background 0.15s; }
+    .nav-panel a:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
+
+    /* Layout */
+    .page { display: flex; max-width: 1100px; margin: 0 auto; padding-top: 56px; }
+    .sidebar { width: 220px; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; padding: 24px 0 24px 24px; flex-shrink: 0; border-right: 1px solid var(--border); }
+    .sidebar a { display: block; font-size: 0.8rem; color: var(--fg-dim); padding: 5px 12px; border-radius: 6px; transition: all 0.1s; }
+    .sidebar a:hover { color: var(--fg); background: var(--surface); }
+    .sidebar a.active { color: var(--accent); background: rgba(255,108,55,0.08); }
+    .sidebar .sep { height: 1px; background: var(--border); margin: 10px 12px; }
+    .sidebar .label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-dim); padding: 12px 12px 4px; opacity: 0.6; }
+    .main { flex: 1; min-width: 0; padding: 32px 32px 80px; }
+
+    /* Typography */
+    h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .intro { font-size: 0.9rem; color: var(--fg-dim); margin-bottom: 32px; line-height: 1.7; max-width: 640px; }
+    h2 { font-size: 1.1rem; font-weight: 700; margin-top: 48px; margin-bottom: 16px; scroll-margin-top: 80px; }
+    h3 { font-size: 0.9rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px; }
+    p { font-size: 0.83rem; color: rgba(232,232,236,0.85); line-height: 1.7; margin-bottom: 10px; }
+    ul { margin: 0 0 12px 18px; }
+    li { font-size: 0.83rem; color: rgba(232,232,236,0.85); line-height: 1.7; margin-bottom: 4px; }
+    code { font-family: var(--mono); font-size: 0.78rem; background: var(--surface); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+
+    /* Steps */
+    .steps { counter-reset: step; margin-bottom: 8px; }
+    .step { position: relative; padding-left: 38px; margin-bottom: 20px; counter-increment: step; }
+    .step::before { content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,108,55,0.12); color: var(--accent); font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .step h3 { margin-top: 2px; }
+
+    /* Flow diagram */
+    .flow { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; font-family: var(--mono); font-size: 0.74rem; color: var(--fg-dim); line-height: 1.9; overflow-x: auto; }
+    .flow .hl { color: var(--accent); }
+    .flow .ok { color: var(--green); }
+
+    /* Callouts */
+    .note { border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.8rem; line-height: 1.65; }
+    .note.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
+    .note.info { background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.18); }
+    .note strong { color: var(--fg); }
+
+    /* Code blocks */
+    pre { font-family: var(--mono); font-size: 0.75rem; background: var(--bg2); padding: 16px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; margin-bottom: 12px; line-height: 1.65; position: relative; }
+    pre .kw { color: var(--accent); }
+    pre .str { color: var(--green); }
+    pre .cm { color: var(--fg-dim); }
+    pre .num { color: var(--yellow); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--fg-dim); font-size: 0.65rem; font-family: var(--font); padding: 3px 8px; border-radius: 4px; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+    pre:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { color: var(--fg); border-color: var(--fg-dim); }
+
+    /* Tables */
+    .fields-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 12px; }
+    .fields-table th { text-align: left; padding: 8px 12px; background: var(--bg2); color: var(--fg-dim); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+    .fields-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .fields-table td:first-child { font-family: var(--mono); color: var(--accent); white-space: nowrap; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px 60px; }
+      pre { font-size: 0.68rem; }
+      .flow { font-size: 0.64rem; }
+    }
+
+    footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 0.75rem; color: #333; }
+    footer a { color: var(--fg-dim); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="c">
+    <a class="logo" href="/"><img class="icon" src="apple-touch-icon.png" alt="Pling"><img class="wordmark" src="pling-wordmark.png" alt="Pling - Push notifications for developers"></a>
+    <div class="nav-right">
+      <a href="docs.html">Docs</a>
+      <a href="https://apps.apple.com/app/pling-ssh-push/id6761271025" style="font-size:0.78rem;font-weight:600;color:var(--bg);background:var(--accent);padding:7px 16px;border-radius:8px;">Download</a>
+      <button class="hamburger" onclick="document.getElementById('nav-overlay').classList.add('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" id="nav-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nav-panel">
+    <div class="nav-panel-header">
+      <button class="nav-close" onclick="document.getElementById('nav-overlay').classList.remove('open')" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/#how">How it works</a>
+    <a href="docs.html">Docs</a>
+    <a href="agent-approvals.html">Agent approvals</a>
+    <a href="support.html">Support</a>
+    <a href="https://github.com/Jeramo/pling">GitHub</a>
+    <a href="mailto:hello@plingpush.com">Contact</a>
+  </div>
+</div>
+
+<div class="page">
+<aside class="sidebar">
+  <div class="label">Agent approvals</div>
+  <a href="#what">What it does</a>
+  <a href="#setup">Set it up</a>
+  <div class="sep"></div>
+  <div class="label">Manual setup</div>
+  <a href="#manual">Hook config</a>
+  <a href="#token">Host token</a>
+  <a href="#options">Options</a>
+  <div class="sep"></div>
+  <div class="label">Reference</div>
+  <a href="#endpoints">Endpoints</a>
+  <a href="#failure">Failure behaviour</a>
+  <a href="#other-agents">Other agents</a>
+  <div class="sep"></div>
+  <div class="label">More</div>
+  <a href="docs.html">Push API docs</a>
+</aside>
+
+<div class="main">
+  <h1>Agent approvals</h1>
+  <p class="intro">Your coding agent asks before it acts. Claude Code pauses, your phone buzzes, you tap Approve or Deny on the lock screen, and it carries on — even when you're nowhere near the terminal.</p>
+
+  <h2 id="what">What it does</h2>
+  <p>Start an agent on a server and walk away, and you normally lose it: the moment it needs permission it sits at a prompt nobody is watching. Agent approvals close that loop.</p>
+
+<div class="flow">
+Claude Code <span class="cm">(on your server)</span>
+  <span class="hl">│</span> about to run <span class="hl">rm -rf build/</span>
+  <span class="hl">▼</span>
+inbox.plingpush.com  <span class="cm">— holds the request open</span>
+  <span class="hl">│</span>
+  <span class="hl">▼</span>
+your iPhone  <span class="cm">— push with Approve / Deny</span>
+  <span class="hl">│</span> you tap Approve
+  <span class="hl">▼</span>
+Claude Code continues  <span class="ok">✓</span>
+</div>
+
+  <p>Nothing is installed on the host. Claude Code hooks are plain configuration, so this is a few lines of JSON in <code>~/.claude/settings.json</code> and an environment variable.</p>
+
+  <h2 id="setup">Set it up</h2>
+  <p>The Pling app does all of this for you over the SSH connection it already has.</p>
+
+  <div class="steps">
+    <div class="step">
+      <h3>Add the host to Pling</h3>
+      <p>Any SSH host works — it doesn't need the Pling agent installed.</p>
+    </div>
+    <div class="step">
+      <h3>Open the host menu</h3>
+      <p>On the <strong>Hosts</strong> tab, tap <code>…</code> next to the host (or long-press it) and choose <strong>Agent approvals</strong>.</p>
+    </div>
+    <div class="step">
+      <h3>Tap Enable approvals</h3>
+      <p>Pling creates a token for that host, merges the hook into <code>~/.claude/settings.json</code> without touching your own hooks, and stores the token in a private file on the host.</p>
+    </div>
+    <div class="step">
+      <h3>Open a new shell on the host</h3>
+      <p>So the token is exported. That's it — the next tool call asks your phone.</p>
+    </div>
+  </div>
+
+  <div class="note info">
+    <strong>Which tools ask?</strong> By default <code>Bash</code>, <code>Write</code>, <code>Edit</code> and <code>NotebookEdit</code> — the ones that change a machine. Reads and searches run without interrupting you.
+  </div>
+
+  <h2 id="manual">Manual setup</h2>
+  <p>Prefer to configure it yourself, or running an agent somewhere Pling can't reach? Merge this into <code>~/.claude/settings.json</code> on the host.</p>
+
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"PreToolUse"</span>: [{
+      <span class="str">"matcher"</span>: <span class="str">"Bash|Write|Edit|NotebookEdit"</span>,
+      <span class="str">"hooks"</span>: [{
+        <span class="str">"type"</span>: <span class="str">"http"</span>,
+        <span class="str">"url"</span>: <span class="str">"https://inbox.plingpush.com/api/hooks/claude-code?timeout=300"</span>,
+        <span class="str">"timeout"</span>: <span class="num">330</span>,
+        <span class="str">"headers"</span>: { <span class="str">"Authorization"</span>: <span class="str">"Bearer $PLING_SOURCE_TOKEN"</span> },
+        <span class="str">"allowedEnvVars"</span>: [<span class="str">"PLING_SOURCE_TOKEN"</span>]
+      }]
+    }]
+  }
+}<button class="copy-btn" onclick="copy(this)">Copy</button></pre>
+
+  <div class="note warn">
+    <strong>Keep the client timeout above the server one.</strong> The <code>timeout</code> field must be larger than the <code>?timeout=</code> value. Claude Code treats its own timeout as non-blocking — it would run the command anyway — so the server's deny needs to land first.
+  </div>
+
+  <h3 id="token">Host token</h3>
+  <p>The hook reads your token from the environment, so it never sits in a file you might commit. Create one in Pling under <strong>Agent approvals</strong>, then on the host:</p>
+
+<pre><span class="cm">$</span> echo <span class="str">'export PLING_SOURCE_TOKEN=your_token_here'</span> &gt; ~/.pling-agent-env
+<span class="cm">$</span> chmod 600 ~/.pling-agent-env
+<span class="cm">$</span> echo <span class="str">'[ -f "$HOME/.pling-agent-env" ] &amp;&amp; . "$HOME/.pling-agent-env"'</span> &gt;&gt; ~/.zshrc<button class="copy-btn" onclick="copy(this)">Copy</button></pre>
+
+  <p>One token per host. Revoking it in Pling immediately stops that host from raising approvals.</p>
+
+  <h3 id="options">Options</h3>
+  <table class="fields-table">
+    <thead><tr><th>Query parameter</th><th>Default</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>timeout</td><td>120</td><td>Seconds to wait for your answer, 1&ndash;540.</td></tr>
+      <tr><td>default</td><td>deny</td><td>What happens when nobody answers. <code>ask</code> hands control back to the local permission prompt instead.</td></tr>
+      <tr><td>agent</td><td>Claude Code</td><td>Name shown on the notification.</td></tr>
+      <tr><td>host</td><td>&mdash;</td><td>Host label shown on the notification.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Get a push when a session finishes</h3>
+  <p>Add a <code>Stop</code> hook. The endpoint returns immediately, so it barely pauses the session:</p>
+
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"Stop"</span>: [{
+      <span class="str">"hooks"</span>: [{
+        <span class="str">"type"</span>: <span class="str">"http"</span>,
+        <span class="str">"url"</span>: <span class="str">"https://inbox.plingpush.com/api/hooks/notify"</span>,
+        <span class="str">"timeout"</span>: <span class="num">10</span>,
+        <span class="str">"headers"</span>: { <span class="str">"Authorization"</span>: <span class="str">"Bearer $PLING_SOURCE_TOKEN"</span> },
+        <span class="str">"allowedEnvVars"</span>: [<span class="str">"PLING_SOURCE_TOKEN"</span>]
+      }]
+    }]
+  }
+}<button class="copy-btn" onclick="copy(this)">Copy</button></pre>
+
+  <h2 id="endpoints">Endpoints</h2>
+  <p>Both authenticate with a host token as <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+  <table class="fields-table">
+    <thead><tr><th>Endpoint</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>POST /api/hooks/claude-code</td><td>Blocks until you answer, then returns Claude Code's <code>permissionDecision</code>.</td></tr>
+      <tr><td>POST /api/hooks/notify</td><td>Records an update and pushes. Returns immediately.</td></tr>
+      <tr><td>GET /api/inbox</td><td>Your pending and recent agent activity.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="failure">Failure behaviour</h2>
+  <p>An approval gate is only worth having if it's safe when things break. This one fails closed:</p>
+  <ul>
+    <li>Nobody answers in time &rarr; <strong>denied</strong>.</li>
+    <li>Token revoked or invalid &rarr; <strong>denied</strong>.</li>
+    <li>Server error on our side &rarr; <strong>denied</strong>.</li>
+    <li>You dismiss the request in the app &rarr; <strong>denied</strong>.</li>
+  </ul>
+  <div class="note warn">
+    <strong>One case we can't cover.</strong> If the host loses its network connection entirely, Claude Code never reaches us — and it treats an unreachable hook as non-blocking, so the command runs. That's Claude Code's behaviour, not a setting we control. Approvals are a safety net for unattended work, not a security boundary.
+  </div>
+
+  <h2 id="other-agents">Other agents</h2>
+  <p>Codex, Cursor and Aider have no hook system, so they can't request approvals this way yet. They can still send you updates through the <a href="docs.html">push API</a> — a line in a wrapper script is enough to get a notification when a run finishes or fails.</p>
+
+  <div class="note info">
+    Agent approvals are part of <strong>Pling Pro</strong>, alongside push notifications, server monitoring and session sharing.
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="c" style="max-width:1100px;margin:0 auto;padding:0 24px">
+    <p>Pling &middot; <a href="privacy.html">Privacy</a> &middot; <a href="support.html">Support</a></p>
+  </div>
+</footer>
+
+<script>
+function copy(btn) {
+  const pre = btn.parentElement;
+  const text = pre.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text);
+  btn.textContent = 'Copied';
+  setTimeout(() => btn.textContent = 'Copy', 1500);
+}
+</script>
+
+</body>
+</html>
